@@ -1,27 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
+import { authAPI } from './services/api'
 import './App.css'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-  const handleLogin = (email: string, password: string) => {
-    // Mock login - in a real app this would be an API call
-    setCurrentUser({
-      id: 1,
-      name: 'Alex Johnson',
-      email: email,
-      department: 'Product',
-      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'
-    })
-    setIsLoggedIn(true)
+  // Check if user is already logged in on app load
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      authAPI
+        .getProfile()
+        .then((user) => {
+          setCurrentUser(user)
+          setIsLoggedIn(true)
+        })
+        .catch(() => {
+          // Token is invalid or expired
+          localStorage.removeItem('auth_token')
+          setIsLoggedIn(false)
+        })
+        .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
+  }, [])
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const response = await authAPI.login(email, password)
+      setCurrentUser(response.user)
+      setIsLoggedIn(true)
+    } catch (error) {
+      console.error('Login failed:', error)
+      throw error
+    }
   }
 
   const handleLogout = () => {
+    authAPI.logout()
     setIsLoggedIn(false)
     setCurrentUser(null)
+  }
+
+  if (loading) {
+    return (
+      <div className="app" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <p>Loading...</p>
+      </div>
+    )
   }
 
   return (

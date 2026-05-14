@@ -173,3 +173,25 @@
   background-color: rgba(245, 98, 122, 0.05);
   transform: translateY(-2px);
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.form-group input:disabled,
+.toggle-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary:disabled:hover {
+  background-color: var(--primary-color);
+  transform: none;
+}
