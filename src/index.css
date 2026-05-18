@@ -5,32 +5,34 @@
 }
 
 :root {
-  /* Professional office-inspired color palette */
-  --primary-color: #0066cc; /* Professional blue */
-  --primary-light: #4d94ff;
-  --primary-dark: #0052a3;
-  --accent-color: #ff6b35; /* Warm accent for highlights */
-  --success-color: #4caf50;
-  --warning-color: #ffa500;
-  --background-light: #f8f9fa;
-  --background-white: #ffffff;
-  --text-dark: #1a1a1a;
-  --text-medium: #4a4a4a;
-  --text-light: #999999;
-  --border-light: #e0e0e0;
-  --border-medium: #d0d0d0;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --primary-color: #7c3aed;
+  --primary-light: #a855f7;
+  --primary-dark: #3730a3;
+  --accent-color: #22d3ee;
+  --accent-light: #f472b6;
+  --success-color: #22c55e;
+  --warning-color: #f97316;
+  --background-base: #050816;
+  --background-surface: rgba(12, 23, 63, 0.88);
+  --background-soft: rgba(255, 255, 255, 0.08);
+  --surface-light: rgba(255, 255, 255, 0.08);
+  --text-bright: #f8fafc;
+  --text-muted: rgba(248, 250, 252, 0.72);
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --shadow: 0 30px 90px rgba(8, 13, 54, 0.32);
+  --shadow-lg: 0 40px 120px rgba(15, 23, 62, 0.42);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background-light);
-  color: var(--text-dark);
+  background-image: radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.18), transparent 16%),
+    radial-gradient(circle at 90% 20%, rgba(99, 102, 241, 0.16), transparent 18%),
+    linear-gradient(135deg, #050816 0%, #061127 42%, #111b3f 100%);
+  color: var(--text-bright);
+  min-height: 100vh;
 }
 
 html, body, #root {
@@ -40,8 +42,52 @@ html, body, #root {
 
 .app {
   width: 100%;
-  height: 100vh;
-  background-color: var(--background-light);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 32px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+input, textarea {
+  font-family: inherit;
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-bright);
+  transition: all 0.2s ease;
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(248, 250, 252, 0.64);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
 }
 
 button {

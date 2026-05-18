@@ -2,7 +2,7 @@
   width: 100%;
   padding: 32px;
   overflow-y: auto;
-  background: linear-gradient(135deg, #f0f4f9 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
   min-height: 100%;
 }
 
@@ -12,31 +12,37 @@
 }
 
 .messages-container h2 {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 24px;
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba(248, 250, 252, 0.95);
+  margin-bottom: 32px;
   letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .empty-state {
   text-align: center;
   padding: 60px 32px;
-  background-color: var(--background-white);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(25, 35, 52, 0.6) 100%);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(124, 58, 237, 0.2);
+  border: 1.5px solid rgba(124, 58, 237, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .empty-state p {
   font-size: 18px;
-  font-weight: 500;
-  color: var(--text-dark);
+  font-weight: 600;
+  color: rgba(248, 250, 252, 0.95);
   margin-bottom: 8px;
 }
 
 .empty-state .subtext {
   font-size: 14px;
-  color: var(--text-light);
+  color: rgba(248, 250, 252, 0.6);
   font-weight: 400;
 }
 
@@ -51,16 +57,18 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background-color: var(--background-white);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(25, 35, 52, 0.6) 100%);
   border-radius: 12px;
-  box-shadow: var(--shadow);
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-light);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1.5px solid rgba(124, 58, 237, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .conversation-item:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.25);
   transform: translateY(-2px);
+  border-color: rgba(124, 58, 237, 0.3);
 }
 
 .conversation-item img {
@@ -68,7 +76,8 @@
   height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--border-light);
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
 }
 
 .conversation-info {
@@ -78,13 +87,13 @@
 .conversation-info h4 {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-dark);
+  color: rgba(248, 250, 252, 0.95);
   margin: 0 0 4px 0;
 }
 
 .conversation-info p {
   font-size: 13px;
-  color: var(--text-light);
+  color: rgba(248, 250, 252, 0.6);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -97,7 +106,8 @@
 
 .btn-message {
   padding: 8px 16px;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  color: white;
   color: white;
   border: none;
   border-radius: 6px;

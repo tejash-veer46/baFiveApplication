@@ -1,6 +1,10 @@
 import { useState } from 'react'
-import { Heart, Loader } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Loader, AlertCircle, CheckCircle } from 'lucide-react'
 import { authAPI } from '../services/api'
+import AnimatedCard from '../components/AnimatedCard'
+import Logo from '../components/Logo'
+import ThemeSwitcher from '../components/ThemeSwitcher'
 import './LoginPage.css'
 
 interface LoginPageProps {
@@ -66,18 +70,45 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="login-container">
-      <div className="login-card">
-        {/* Logo/Header */}
+      <div className="login-visuals">
+        <div className="floating-orb orb-one"></div>
+        <div className="floating-orb orb-two"></div>
+        <div className="floating-orb orb-three"></div>
+      </div>
+      <AnimatedCard className="login-card">
         <div className="login-header">
-          <div className="logo">
-            <Heart size={40} fill="currentColor" />
-          </div>
+          <motion.div
+            className="logo-wrapper"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+          >
+            <Logo size="large" variant="gradient" />
+          </motion.div>
           <h1>baFive</h1>
-          <p>Connect with your colleagues</p>
+          <p className="tagline">✨ Connect • Collaborate • Grow ✨</p>
+          <p className="subtitle">Professional networking for your team</p>
         </div>
 
-        {/* Error Message */}
-        {error && <div style={{ color: '#d32f2f', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
+        {/* Error Message with better styling */}
+        {error && (
+          <motion.div
+            className="error-banner"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <AlertCircle size={20} />
+            <div className="error-content">
+              <strong>Oops! Something went wrong</strong>
+              <p>{error}</p>
+              {error.includes('401') && <p className="error-hint">💡 Hint: Check your email and password</p>}
+              {error.includes('email') && <p className="error-hint">💡 Please enter a valid email address</p>}
+              {error.includes('password') && <p className="error-hint">💡 Password must be at least 6 characters</p>}
+              {error.includes('already exists') && <p className="error-hint">💡 Try logging in instead, or use a different email</p>}
+            </div>
+          </motion.div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="login-form">
@@ -170,7 +201,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             {loading ? 'Loading...' : 'Continue as Demo User'}
           </button>
         </div>
-      </div>
+      </AnimatedCard>
+      <ThemeSwitcher />
     </div>
   )
 }

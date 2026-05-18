@@ -1,0 +1,226 @@
+/* Extended theme styles that apply to all components */
+
+/* Apply primary gradient to buttons */
+.theme-modern-blue .btn-primary,
+.theme-modern-blue button[type="submit"] {
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-neon .btn-primary,
+.theme-neon button[type="submit"] {
+  background: linear-gradient(135deg, #00f7ff 0%, #ff006e 100%);
+  box-shadow: 0 6px 20px rgba(0, 247, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-sunset .btn-primary,
+.theme-sunset button[type="submit"] {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-mint .btn-primary,
+.theme-mint button[type="submit"] {
+  background: linear-gradient(135deg, #00d4aa 0%, #2dd4bf 100%);
+  box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-elegant .btn-primary,
+.theme-elegant button[type="submit"] {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-ocean .btn-primary,
+.theme-ocean button[type="submit"] {
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-dracula .btn-primary,
+.theme-dracula button[type="submit"] {
+  background: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%);
+  box-shadow: 0 6px 20px rgba(255, 121, 198, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-forest .btn-primary,
+.theme-forest button[type="submit"] {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-cyberpunk .btn-primary,
+.theme-cyberpunk button[type="submit"] {
+  background: linear-gradient(135deg, #fe0080 0%, #7928ca 100%);
+  box-shadow: 0 6px 20px rgba(254, 0, 128, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Background gradients */
+.theme-modern-blue .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(124, 58, 237, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.1), transparent 25%);
+}
+
+.theme-neon .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(0, 247, 255, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(255, 0, 110, 0.1), transparent 25%);
+}
+
+.theme-sunset .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(255, 107, 53, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(247, 147, 30, 0.1), transparent 25%);
+}
+
+.theme-mint .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(0, 212, 170, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(45, 212, 191, 0.1), transparent 25%);
+}
+
+.theme-elegant .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(168, 85, 247, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(236, 72, 153, 0.1), transparent 25%);
+}
+
+.theme-ocean .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(2, 132, 199, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(6, 182, 212, 0.1), transparent 25%);
+}
+
+.theme-dracula .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(255, 121, 198, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(189, 147, 249, 0.1), transparent 25%);
+}
+
+.theme-forest .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(52, 211, 153, 0.1), transparent 25%);
+}
+
+.theme-cyberpunk .home-page::before {
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(254, 0, 128, 0.1), transparent 25%),
+    radial-gradient(circle at 90% 20%, rgba(121, 40, 202, 0.1), transparent 25%);
+}
+
+/* Cards and accent elements */
+.theme-modern-blue .sidebar {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.theme-modern-blue .match-item {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+.theme-neon .sidebar {
+  border-color: rgba(0, 247, 255, 0.2);
+}
+
+.theme-neon .match-item {
+  border-color: rgba(0, 247, 255, 0.2);
+}
+
+.theme-sunset .sidebar {
+  border-color: rgba(255, 107, 53, 0.2);
+}
+
+.theme-sunset .match-item {
+  border-color: rgba(255, 107, 53, 0.2);
+}
+
+.theme-mint .sidebar {
+  border-color: rgba(0, 212, 170, 0.2);
+}
+
+.theme-mint .match-item {
+  border-color: rgba(0, 212, 170, 0.2);
+}
+
+.theme-elegant .sidebar {
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.theme-elegant .match-item {
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.theme-ocean .sidebar {
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+.theme-ocean .match-item {
+  border-color: rgba(2, 132, 199, 0.2);
+}
+
+.theme-dracula .sidebar {
+  border-color: rgba(255, 121, 198, 0.2);
+}
+
+.theme-dracula .match-item {
+  border-color: rgba(255, 121, 198, 0.2);
+}
+
+.theme-forest .sidebar {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.theme-forest .match-item {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.theme-cyberpunk .sidebar {
+  border-color: rgba(254, 0, 128, 0.2);
+}
+
+.theme-cyberpunk .match-item {
+  border-color: rgba(254, 0, 128, 0.2);
+}
+
+/* Profile cards */
+.profile-card {
+  border-color: var(--primary-light, rgba(124, 58, 237, 0.2));
+}
+
+/* Hover effects */
+.theme-modern-blue .match-item:hover {
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+}
+
+.theme-neon .match-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 247, 255, 0.2);
+}
+
+.theme-sunset .match-item:hover {
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.2);
+}
+
+.theme-mint .match-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 212, 170, 0.2);
+}
+
+.theme-elegant .match-item:hover {
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+}
+
+.theme-ocean .match-item:hover {
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.2);
+}
+
+.theme-dracula .match-item:hover {
+  box-shadow: 0 4px 16px rgba(255, 121, 198, 0.2);
+}
+
+.theme-forest .match-item:hover {
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.theme-cyberpunk .match-item:hover {
+  box-shadow: 0 4px 16px rgba(254, 0, 128, 0.2);
+}

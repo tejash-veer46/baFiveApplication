@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import { MessageCircle, User, LogOut, Flame, Star, X } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { MessageCircle, User, LogOut, Users, Star, X, Zap } from 'lucide-react'
 import ProfileCard from '../components/ProfileCard'
+import Logo from '../components/Logo'
+import ThemeSwitcher from '../components/ThemeSwitcher'
 import MessagesPage from './MessagesPage'
 import ProfilePage from './ProfilePage'
 import './HomePage.css'
@@ -84,8 +87,8 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
       {/* Header */}
       <header className="header">
         <div className="header-left">
-          <div className="logo">
-            <Flame size={24} />
+          <div className="logo-header">
+            <Logo size="small" variant="gradient" />
             <span>baFive</span>
           </div>
         </div>
@@ -97,7 +100,7 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
               onClick={() => setActiveTab('discover')}
               title="Discover colleagues"
             >
-              <Flame size={20} />
+              <Users size={20} />
               Discover
             </button>
             <button
@@ -120,9 +123,15 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
         </div>
 
         <div className="header-right">
-          <button onClick={onLogout} className="logout-btn" title="Logout">
+          <motion.button
+            onClick={onLogout}
+            className="logout-btn"
+            title="Logout"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <LogOut size={20} />
-          </button>
+          </motion.button>
         </div>
       </header>
 
@@ -180,6 +189,8 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
         {activeTab === 'messages' && <MessagesPage matches={matches} />}
         {activeTab === 'profile' && <ProfilePage currentUser={currentUser} />}
       </main>
+
+      <ThemeSwitcher />
     </div>
   )
 }

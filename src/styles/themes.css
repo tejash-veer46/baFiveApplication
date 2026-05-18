@@ -1,0 +1,98 @@
+/* Modern Blue Theme - Current Default */
+:root.theme-modern-blue {
+  --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+  --primary-dark: #7c3aed;
+  --primary-light: #3b82f6;
+  --card-gradient: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+}
+
+/* Vibrant Neon Theme */
+:root.theme-neon {
+  --primary-gradient: linear-gradient(135deg, #00f7ff 0%, #ff006e 100%);
+  --primary-dark: #00f7ff;
+  --primary-light: #ff006e;
+  --card-gradient: linear-gradient(135deg, rgba(0, 247, 255, 0.15) 0%, rgba(255, 0, 110, 0.1) 100%);
+  --bg-primary: #0a0e27;
+  --bg-secondary: #1a1f3a;
+  --text-primary: #ffffff;
+}
+
+/* Warm Sunset Theme */
+:root.theme-sunset {
+  --primary-gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  --primary-dark: #ff6b35;
+  --primary-light: #f7931e;
+  --card-gradient: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(247, 147, 30, 0.1) 100%);
+  --bg-primary: #1a1410;
+  --bg-secondary: #2d2217;
+  --text-primary: #faf5f0;
+}
+
+/* Cool Mint Theme */
+:root.theme-mint {
+  --primary-gradient: linear-gradient(135deg, #00d4aa 0%, #2dd4bf 100%);
+  --primary-dark: #00d4aa;
+  --primary-light: #2dd4bf;
+  --card-gradient: linear-gradient(135deg, rgba(0, 212, 170, 0.15) 0%, rgba(45, 212, 191, 0.1) 100%);
+  --bg-primary: #0d2e2a;
+  --bg-secondary: #1a3f3a;
+  --text-primary: #f0fdfb;
+}
+
+/* Elegant Dark Theme */
+:root.theme-elegant {
+  --primary-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --primary-dark: #a855f7;
+  --primary-light: #ec4899;
+  --card-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  --bg-primary: #0f0a1a;
+  --bg-secondary: #1a1333;
+  --text-primary: #faf8ff;
+}
+
+/* Ocean Deep Theme */
+:root.theme-ocean {
+  --primary-gradient: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);
+  --primary-dark: #0284c7;
+  --primary-light: #06b6d4;
+  --card-gradient: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+  --bg-primary: #0c1e2a;
+  --bg-secondary: #1a3a4a;
+  --text-primary: #f0f9ff;
+}
+
+/* Dracula Dark Theme */
+:root.theme-dracula {
+  --primary-gradient: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%);
+  --primary-dark: #ff79c6;
+  --primary-light: #bd93f9;
+  --card-gradient: linear-gradient(135deg, rgba(255, 121, 198, 0.15) 0%, rgba(189, 147, 249, 0.1) 100%);
+  --bg-primary: #282a36;
+  --bg-secondary: #44475a;
+  --text-primary: #f8f8f2;
+}
+
+/* Forest Green Theme */
+:root.theme-forest {
+  --primary-gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --primary-dark: #10b981;
+  --primary-light: #34d399;
+  --card-gradient: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(52, 211, 153, 0.1) 100%);
+  --bg-primary: #0f2a1c;
+  --bg-secondary: #1a4d32;
+  --text-primary: #f0fdf4;
+}
+
+/* Cyberpunk Theme */
+:root.theme-cyberpunk {
+  --primary-gradient: linear-gradient(135deg, #fe0080 0%, #7928ca 100%);
+  --primary-dark: #fe0080;
+  --primary-light: #7928ca;
+  --card-gradient: linear-gradient(135deg, rgba(254, 0, 128, 0.15) 0%, rgba(121, 40, 202, 0.1) 100%);
+  --bg-primary: #0a0009;
+  --bg-secondary: #1a0a2a;
+  --text-primary: #ffccff;
+}
