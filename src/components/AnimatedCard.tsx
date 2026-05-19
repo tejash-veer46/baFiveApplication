@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import useTheme from '../hooks/useTheme';
+import useThemeContext from '../contexts/ThemeContext';
 import './AnimatedCard.css';
 
 interface AnimatedCardProps {
@@ -18,7 +18,7 @@ export const AnimatedCard = ({
   gradient,
   delay = 0
 }: AnimatedCardProps) => {
-  const theme = useTheme();
+  const { gradient: themeGradient, colors } = useThemeContext();
 
   return (
     <motion.div
@@ -28,13 +28,13 @@ export const AnimatedCard = ({
       whileHover={{
         y: -10,
         rotateX: -6,
-        boxShadow: `0 20px 60px ${theme.colors.primary1}40`
+        boxShadow: `0 20px 60px ${colors.primary1}40`
       }}
       onClick={onClick}
       className={`animated-card ${className}`}
       style={{
         perspective: '1200px',
-        background: gradient || `linear-gradient(135deg, ${theme.colors.primary1} 0%, ${theme.colors.primary2} 100%)`
+        background: gradient || themeGradient
       }}
     >
       {children}

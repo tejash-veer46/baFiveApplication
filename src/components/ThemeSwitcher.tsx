@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Palette } from 'lucide-react'
+import useThemeContext from '../contexts/ThemeContext'
 import './ThemeSwitcher.css'
 
 interface Theme {
@@ -21,21 +22,8 @@ const themes: Theme[] = [
 ]
 
 export default function ThemeSwitcher() {
-  const [currentTheme, setCurrentTheme] = useState('modern-blue')
+  const { theme: currentTheme, setTheme } = useThemeContext()
   const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    // Set theme on mount and when changed
-    const root = document.documentElement
-    root.className = `theme-${currentTheme}`
-    localStorage.setItem('selectedTheme', currentTheme)
-  }, [currentTheme])
-
-  useEffect(() => {
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem('selectedTheme') || 'modern-blue'
-    setCurrentTheme(savedTheme)
-  }, [])
 
   return (
     <div className="theme-switcher">
@@ -56,7 +44,7 @@ export default function ThemeSwitcher() {
                 key={theme.id}
                 className={`theme-option ${currentTheme === theme.id ? 'active' : ''}`}
                 onClick={() => {
-                  setCurrentTheme(theme.id)
+                  setTheme(theme.id)
                   setIsOpen(false)
                 }}
                 title={theme.name}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import { authAPI } from './services/api'
+import { ThemeProvider } from './contexts/ThemeContext'
 import './App.css'
 
 function App() {
@@ -56,13 +57,15 @@ function App() {
   }
 
   return (
-    <div className="app">
-      {!isLoggedIn ? (
-        <LoginPage onLogin={handleLogin} />
-      ) : (
-        <HomePage currentUser={currentUser} onLogout={handleLogout} />
-      )}
-    </div>
+    <ThemeProvider>
+      <div className="app">
+        {!isLoggedIn ? (
+          <LoginPage onLogin={handleLogin} />
+        ) : (
+          <HomePage currentUser={currentUser} onLogout={handleLogout} />
+        )}
+      </div>
+    </ThemeProvider>
   )
 }
 
