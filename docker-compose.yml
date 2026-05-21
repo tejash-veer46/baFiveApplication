@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bafive-backend
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: development
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_change_this_in_production_12345}
+      DATABASE_PATH: /app/data/bafive.db
+      CORS_ORIGIN: http://localhost:5173
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend:/app
+      - /app/node_modules
+    command: >
+      sh -c "node execute-schema.js && npm start"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - bafive-network
+
+  # Frontend Service (Vite Dev Server)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: bafive-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:5000
+    volumes:
+      - ./src:/app/src
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - bafive-network
+    stdin_open: true
+    tty: true
+
+networks:
+  bafive-network:
+    driver: bridge
+
+volumes:
+  backend_data:
+    driver: local
