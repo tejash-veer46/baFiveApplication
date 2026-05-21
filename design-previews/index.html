@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>baFive Design Themes Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #0f0f23;
+            color: #f8fafc;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .theme-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        }
+
+        .theme-preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-info {
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+
+        .theme-colors {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-hex {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            font-family: 'Monaco', 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .theme-character {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Theme Gradients */
+        .theme-1 { background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%); }
+        .theme-2 { background: linear-gradient(135deg, #00f7ff 0%, #ff006e 100%); }
+        .theme-3 { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        .theme-4 { background: linear-gradient(135deg, #00d4aa 0%, #2dd4bf 100%); }
+        .theme-5 { background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); }
+        .theme-6 { background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%); }
+        .theme-7 { background: linear-gradient(135deg, #ff79c6 0%, #bd93f9 100%); }
+        .theme-8 { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+        .theme-9 { background: linear-gradient(135deg, #fe0080 0%, #7928ca 100%); }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            margin-top: 50px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 baFive Design Themes</h1>
+        <p class="subtitle">9 Carefully Crafted Color Palettes for Professional Networking</p>
+
+        <div class="themes-grid">
+            <!-- Theme 1: Modern Blue -->
+            <div class="theme-card">
+                <div class="theme-preview theme-1">Modern Blue</div>
+                <div class="theme-info">
+                    <div class="theme-name">1. Modern Blue</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #7c3aed;"></div>
+                        <div class="color-swatch" style="background: #3b82f6;"></div>
+                    </div>
+                    <div class="theme-hex">#7c3aed → #3b82f6</div>
+                    <div class="theme-character">Professional, balanced, corporate</div>
+                </div>
+            </div>
+
+            <!-- Theme 2: Vibrant Neon -->
+            <div class="theme-card">
+                <div class="theme-preview theme-2">Vibrant Neon</div>
+                <div class="theme-info">
+                    <div class="theme-name">2. Vibrant Neon</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #00f7ff;"></div>
+                        <div class="color-swatch" style="background: #ff006e;"></div>
+                    </div>
+                    <div class="theme-hex">#00f7ff → #ff006e</div>
+                    <div class="theme-character">Bold, energetic, eye-catching</div>
+                </div>
+            </div>
+
+            <!-- Theme 3: Warm Sunset -->
+            <div class="theme-card">
+                <div class="theme-preview theme-3">Warm Sunset</div>
+                <div class="theme-info">
+                    <div class="theme-name">3. Warm Sunset</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #ff6b35;"></div>
+                        <div class="color-swatch" style="background: #f7931e;"></div>
+                    </div>
+                    <div class="theme-hex">#ff6b35 → #f7931e</div>
+                    <div class="theme-character">Warm, inviting, organic</div>
+                </div>
+            </div>
+
+            <!-- Theme 4: Cool Mint -->
+            <div class="theme-card">
+                <div class="theme-preview theme-4">Cool Mint</div>
+                <div class="theme-info">
+                    <div class="theme-name">4. Cool Mint</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #00d4aa;"></div>
+                        <div class="color-swatch" style="background: #2dd4bf;"></div>
+                    </div>
+                    <div class="theme-hex">#00d4aa → #2dd4bf</div>
+                    <div class="theme-character">Fresh, calm, soothing</div>
+                </div>
+            </div>
+
+            <!-- Theme 5: Elegant Dark -->
+            <div class="theme-card">
+                <div class="theme-preview theme-5">Elegant Dark</div>
+                <div class="theme-info">
+                    <div class="theme-name">5. Elegant Dark</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #a855f7;"></div>
+                        <div class="color-swatch" style="background: #ec4899;"></div>
+                    </div>
+                    <div class="theme-hex">#a855f7 → #ec4899</div>
+                    <div class="theme-character">Sophisticated, refined, luxurious</div>
+                </div>
+            </div>
+
+            <!-- Theme 6: Ocean Deep -->
+            <div class="theme-card">
+                <div class="theme-preview theme-6">Ocean Deep</div>
+                <div class="theme-info">
+                    <div class="theme-name">6. Ocean Deep</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #0284c7;"></div>
+                        <div class="color-swatch" style="background: #06b6d4;"></div>
+                    </div>
+                    <div class="theme-hex">#0284c7 → #06b6d4</div>
+                    <div class="theme-character">Trustworthy, stable, calming</div>
+                </div>
+            </div>
+
+            <!-- Theme 7: Dracula Dark -->
+            <div class="theme-card">
+                <div class="theme-preview theme-7">Dracula Dark</div>
+                <div class="theme-info">
+                    <div class="theme-name">7. Dracula Dark</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #ff79c6;"></div>
+                        <div class="color-swatch" style="background: #bd93f9;"></div>
+                    </div>
+                    <div class="theme-hex">#ff79c6 → #bd93f9</div>
+                    <div class="theme-character">Dark, modern, developer-friendly</div>
+                </div>
+            </div>
+
+            <!-- Theme 8: Forest Green -->
+            <div class="theme-card">
+                <div class="theme-preview theme-8">Forest Green</div>
+                <div class="theme-info">
+                    <div class="theme-name">8. Forest Green</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #10b981;"></div>
+                        <div class="color-swatch" style="background: #34d399;"></div>
+                    </div>
+                    <div class="theme-hex">#10b981 → #34d399</div>
+                    <div class="theme-character">Natural, sustainable, growth</div>
+                </div>
+            </div>
+
+            <!-- Theme 9: Cyberpunk -->
+            <div class="theme-card">
+                <div class="theme-preview theme-9">Cyberpunk</div>
+                <div class="theme-info">
+                    <div class="theme-name">9. Cyberpunk</div>
+                    <div class="theme-colors">
+                        <div class="color-swatch" style="background: #fe0080;"></div>
+                        <div class="color-swatch" style="background: #7928ca;"></div>
+                    </div>
+                    <div class="theme-hex">#fe0080 → #7928ca</div>
+                    <div class="theme-character">Futuristic, bold, high-contrast</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Themes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">40+</div>
+                <div class="stat-label">CSS Variables</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Responsive</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">AA</div>
+                <div class="stat-label">WCAG Accessible</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>baFive Theme System • Last Updated: May 21, 2026 • View live themes at http://localhost:5173</p>
+        </footer>
+    </div>
+</body>
+</html>
