@@ -1,5 +1,10 @@
 import { Variants } from 'framer-motion';
 
+/**
+ * Animation variants for smooth, professional UI transitions
+ * Used throughout the application for consistent motion design
+ */
+
 export const fadeInUp: Variants = {
   initial: { opacity: 0, y: 20 },
   animate: { 
