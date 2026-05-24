@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, User, LogOut, Users, Star, X, Zap } from 'lucide-react'
 import ProfileCard from '../components/ProfileCard'
 import Logo from '../components/Logo'
 import ThemeSwitcher from '../components/ThemeSwitcher'
 import MessagesPage from './MessagesPage'
 import ProfilePage from './ProfilePage'
+import { containerVariants, itemVariants, fadeInUp } from '../utils/animations'
 import './HomePage.css'
 
 interface HomePageProps {
@@ -61,6 +62,12 @@ const mockProfiles = [
   }
 ]
 
+const tabVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 }
+}
+
 export default function HomePage({ currentUser, onLogout }: HomePageProps) {
   const [activeTab, setActiveTab] = useState<'discover' | 'messages' | 'profile'>('discover')
   const [profiles, setProfiles] = useState(mockProfiles)
@@ -85,40 +92,43 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
   return (
     <div className="home-page">
       {/* Header */}
-      <header className="header">
+      <motion.header 
+        className="header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="header-left">
-          <div className="logo-header">
+          <motion.div 
+            className="logo-header"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <Logo size="small" variant="gradient" />
             <span>baFive</span>
-          </div>
+          </motion.div>
         </div>
 
         <div className="header-center">
           <nav className="nav-tabs">
-            <button
-              className={`nav-tab ${activeTab === 'discover' ? 'active' : ''}`}
-              onClick={() => setActiveTab('discover')}
-              title="Discover colleagues"
-            >
-              <Users size={20} />
-              Discover
-            </button>
-            <button
-              className={`nav-tab ${activeTab === 'messages' ? 'active' : ''}`}
-              onClick={() => setActiveTab('messages')}
-              title="Messages"
-            >
-              <MessageCircle size={20} />
-              Messages
-            </button>
-            <button
-              className={`nav-tab ${activeTab === 'profile' ? 'active' : ''}`}
-              onClick={() => setActiveTab('profile')}
-              title="Your profile"
-            >
-              <User size={20} />
-              Profile
-            </button>
+            {[
+              { id: 'discover', label: 'Discover', icon: Users },
+              { id: 'messages', label: 'Messages', icon: MessageCircle },
+              { id: 'profile', label: 'Profile', icon: User }
+            ].map((tab) => (
+              <motion.button
+                key={tab.id}
+                className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id as 'discover' | 'messages' | 'profile')}
+                title={tab.label}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              >
+                <tab.icon size={20} />
+                {tab.label}
+              </motion.button>
+            ))}
           </nav>
         </div>
 
@@ -127,67 +137,125 @@ export default function HomePage({ currentUser, onLogout }: HomePageProps) {
             onClick={onLogout}
             className="logout-btn"
             title="Logout"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.1, rotate: 10 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           >
             <LogOut size={20} />
           </motion.button>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Content */}
       <main className="main-content">
-        {activeTab === 'discover' && (
-          <>
-            {/* Connections Sidebar */}
-            <aside className="sidebar">
-              <div className="matches-section">
-                <h3>⭐ Connections</h3>
-                <div className="matches-list">
-                  {matches.length === 0 ? (
-                    <p className="no-matches">Connect with colleagues you're interested in!</p>
-                  ) : (
-                    matches.map((match) => (
-                      <div key={match.id} className="match-item">
-                        <img src={match.image} alt={match.name} />
-                        <div className="match-info">
-                          <span className="match-name">{match.name}</span>
-                          <span className="match-dept">{match.department}</span>
-                        </div>
-                      </div>
-                    ))
+        <AnimatePresence mode="wait">
+          {activeTab === 'discover' && (
+            <motion.div 
+              key="discover"
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="discover-content"
+            >
+              {/* Connections Sidebar */}
+              <motion.aside 
+                className="sidebar"
+                variants={itemVariants}
+              >
+                <motion.div 
+                  className="matches-section"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                  <h3>⭐ Connections</h3>
+                  <div className="matches-list">
+                    {matches.length === 0 ? (
+                      <p className="no-matches">Connect with colleagues you're interested in!</p>
+                    ) : (
+                      <motion.div variants={containerVariants} initial="initial" animate="animate">
+                        {matches.map((match) => (
+                          <motion.div 
+                            key={match.id} 
+                            className="match-item"
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.02, x: 4 }}
+                          >
+                            <img src={match.image} alt={match.name} />
+                            <div className="match-info">
+                              <span className="match-name">{match.name}</span>
+                              <span className="match-dept">{match.department}</span>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.aside>
+
+              {/* Card Stack */}
+              <motion.section 
+                className="card-section"
+                variants={itemVariants}
+              >
+                <AnimatePresence mode="wait">
+                  {currentProfile && (
+                    <ProfileCard
+                      key={currentProfile.id}
+                      profile={currentProfile}
+                      onConnect={handleConnect}
+                      onPass={handlePass}
+                    />
                   )}
-                </div>
-              </div>
-            </aside>
+                </AnimatePresence>
+              </motion.section>
 
-            {/* Card Stack */}
-            <section className="card-section">
-              {currentProfile && (
-                <ProfileCard
-                  profile={currentProfile}
-                  onConnect={handleConnect}
-                  onPass={handlePass}
-                />
-              )}
-            </section>
+              {/* Info Section */}
+              <motion.aside 
+                className="info-section"
+                variants={itemVariants}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                <motion.div className="current-user-info" whileHover={{ y: -5 }}>
+                  <h3>You</h3>
+                  <div className="user-card">
+                    <img src={currentUser.profileImage} alt={currentUser.name} />
+                    <h4>{currentUser.name}</h4>
+                    <p>{currentUser.department}</p>
+                  </div>
+                </motion.div>
+              </motion.aside>
+            </motion.div>
+          )}
 
-            {/* Info Section */}
-            <aside className="info-section">
-              <div className="current-user-info">
-                <h3>You</h3>
-                <div className="user-card">
-                  <img src={currentUser.profileImage} alt={currentUser.name} />
-                  <h4>{currentUser.name}</h4>
-                  <p>{currentUser.department}</p>
-                </div>
-              </div>
-            </aside>
-          </>
-        )}
+          {activeTab === 'messages' && (
+            <motion.div
+              key="messages"
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <MessagesPage matches={matches} />
+            </motion.div>
+          )}
 
-        {activeTab === 'messages' && <MessagesPage matches={matches} />}
-        {activeTab === 'profile' && <ProfilePage currentUser={currentUser} />}
+          {activeTab === 'profile' && (
+            <motion.div
+              key="profile"
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <ProfilePage currentUser={currentUser} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       <ThemeSwitcher />

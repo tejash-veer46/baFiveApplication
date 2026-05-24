@@ -11,6 +11,7 @@
   backdrop-filter: blur(18px);
   box-shadow: 0 32px 100px rgba(25, 32, 75, 0.24);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform;
 }
 
 .animated-card::before {
@@ -21,9 +22,42 @@
     radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 22%);
   opacity: 0.85;
   pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.animated-card.interactive::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 28px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.animated-card.interactive:hover::after {
+  opacity: 1;
 }
 
 .animated-card > * {
   position: relative;
   z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animated-card.interactive:hover::before {
+  opacity: 1;
 }
