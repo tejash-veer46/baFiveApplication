@@ -5,6 +5,10 @@ interface LogoProps {
   variant?: 'light' | 'dark' | 'gradient'
 }
 
+/**
+ * baFive Logo Component
+ * Displays a modern network-style logo representing the 5-colleague connection system
+ */
 export default function Logo({ size = 'medium', variant = 'gradient' }: LogoProps) {
   const sizeMap = {
     small: 32,

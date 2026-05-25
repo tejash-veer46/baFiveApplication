@@ -9,6 +9,10 @@ interface Theme {
   colors: string[]
 }
 
+/**
+ * Theme Switcher Component
+ * Allows users to switch between multiple predefined color themes
+ */
 const themes: Theme[] = [
   { id: 'modern-blue', name: 'Modern Blue', colors: ['#7c3aed', '#3b82f6'] },
   { id: 'neon', name: 'Vibrant Neon', colors: ['#00f7ff', '#ff006e'] },

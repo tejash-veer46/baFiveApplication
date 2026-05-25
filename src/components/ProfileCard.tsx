@@ -18,6 +18,10 @@ interface ProfileCardProps {
   onPass: () => void
 }
 
+/**
+ * ProfileCard Component
+ * Displays user profile with interactive connect/pass actions
+ */
 export default function ProfileCard({ profile, onConnect, onPass }: ProfileCardProps) {
   const [isAnimating, setIsAnimating] = useState(false)
   const [direction, setDirection] = useState<'left' | 'right' | null>(null)
