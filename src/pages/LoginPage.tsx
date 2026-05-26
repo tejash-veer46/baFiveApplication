@@ -19,10 +19,12 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   const [department, setDepartment] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     setLoading(true)
 
     try {
@@ -32,15 +34,21 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           throw new Error('Please fill in all fields')
         }
         await authAPI.signup(name, email, password, department)
+        setSuccessMessage('Account created! Signing you in...')
+        setTimeout(() => {
+          onLogin(email, password)
+        }, 1000)
       } else {
         // Login
         if (!email || !password) {
           throw new Error('Please enter email and password')
         }
         await authAPI.login(email, password)
+        setSuccessMessage('Welcome back!')
+        setTimeout(() => {
+          onLogin(email, password)
+        }, 500)
       }
-      // Call parent onLogin to update state
-      onLogin(email, password)
     } catch (err: any) {
       setError(err.message || 'An error occurred. Please try again.')
     } finally {
@@ -70,11 +78,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="login-container">
-      <div className="login-visuals">
-        <div className="floating-orb orb-one"></div>
-        <div className="floating-orb orb-two"></div>
-        <div className="floating-orb orb-three"></div>
-      </div>
+      <div className="login-gradient-bg"></div>
+      
       <AnimatedCard className="login-card">
         <div className="login-header">
           <motion.div
@@ -86,11 +91,23 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             <Logo size="large" variant="gradient" />
           </motion.div>
           <h1>baFive</h1>
-          <p className="tagline">✨ Connect • Collaborate • Grow ✨</p>
-          <p className="subtitle">Professional networking for your team</p>
+          <p className="subtitle">Professional networking platform</p>
         </div>
 
-        {/* Error Message with better styling */}
+        {/* Success Message */}
+        {successMessage && (
+          <motion.div
+            className="success-banner"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <CheckCircle size={20} />
+            <p>{successMessage}</p>
+          </motion.div>
+        )}
+
+        {/* Error Message */}
         {error && (
           <motion.div
             className="error-banner"
@@ -99,13 +116,9 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             exit={{ opacity: 0, y: -10 }}
           >
             <AlertCircle size={20} />
-            <div className="error-content">
-              <strong>Oops! Something went wrong</strong>
+            <div>
+              <strong>Error</strong>
               <p>{error}</p>
-              {error.includes('401') && <p className="error-hint">💡 Hint: Check your email and password</p>}
-              {error.includes('email') && <p className="error-hint">💡 Please enter a valid email address</p>}
-              {error.includes('password') && <p className="error-hint">💡 Password must be at least 6 characters</p>}
-              {error.includes('already exists') && <p className="error-hint">💡 Try logging in instead, or use a different email</p>}
             </div>
           </motion.div>
         )}
@@ -115,9 +128,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           {isSignUp && (
             <>
               <div className="form-group">
+                <label>Full Name</label>
                 <input
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required={isSignUp}
@@ -125,9 +139,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 />
               </div>
               <div className="form-group">
+                <label>Department</label>
                 <input
                   type="text"
-                  placeholder="Department"
+                  placeholder="Engineering"
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   required={isSignUp}
@@ -138,9 +153,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           )}
 
           <div className="form-group">
+            <label>Email</label>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -149,9 +165,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           </div>
 
           <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -172,33 +189,35 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </form>
 
         {/* Toggle Sign Up / Sign In */}
-        <div className="toggle-auth">
-          <p>
-            {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignUp(!isSignUp)
-                setError('')
-              }}
-              className="toggle-btn"
-              disabled={loading}
-            >
-              {isSignUp ? 'Sign In' : 'Sign Up'}
-            </button>
-          </p>
+        <div className="auth-divider">
+          <div className="divider-line"></div>
+          <span>{isSignUp ? 'Already have an account?' : "Don't have an account?"}</span>
+          <div className="divider-line"></div>
         </div>
 
+        <button
+          type="button"
+          onClick={() => {
+            setIsSignUp(!isSignUp)
+            setError('')
+            setSuccessMessage('')
+          }}
+          className="btn-toggle"
+          disabled={loading}
+        >
+          {isSignUp ? 'Sign In Instead' : 'Create Account'}
+        </button>
+
         {/* Demo Login */}
-        <div className="demo-login">
-          <p className="demo-text">Demo Mode</p>
+        <div className="demo-section">
+          <p className="demo-text">First time here?</p>
           <button
             type="button"
             onClick={handleDemoLogin}
             className="btn-secondary"
             disabled={loading}
           >
-            {loading ? 'Loading...' : 'Continue as Demo User'}
+            {loading ? 'Loading...' : 'Try Demo'}
           </button>
         </div>
       </AnimatedCard>
