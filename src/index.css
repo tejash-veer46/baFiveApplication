@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
 :root {
   --primary-color: #1a1a1a;
   --primary-light: #333333;
