@@ -84,12 +84,12 @@ export default function Logo({ size = 'medium', variant = 'gradient' }: LogoProp
         {/* Gradients */}
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#3b82f6" />
+            <stop offset="0%" stopColor="#1a1a1a" />
+            <stop offset="100%" stopColor="#333333" />
           </linearGradient>
           <linearGradient id="gradientBg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#0ea5e9" />
+            <stop offset="0%" stopColor="#1a1a1a" />
+            <stop offset="100%" stopColor="#4a4a4a" />
           </linearGradient>
         </defs>
       </svg>

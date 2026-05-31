@@ -40,11 +40,11 @@
 }
 
 .login-header h1 {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 12px 0 8px;
-  letter-spacing: -0.3px;
+  margin: 16px 0 8px;
+  letter-spacing: -0.5px;
 }
 
 .login-header .subtitle {
@@ -119,11 +119,13 @@
 }
 
 .form-group label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #1a1a1a;
   text-transform: uppercase;
   letter-spacing: 0.6px;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .form-group input {
@@ -138,7 +140,8 @@
 }
 
 .form-group input::placeholder {
-  color: #999999;
+  color: #b0b0b0;
+  font-weight: 400;
 }
 
 .form-group input:focus {
