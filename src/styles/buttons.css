@@ -8,14 +8,14 @@ button:not([class*="nav"]):not([class*="toggle"]) {
   justify-content: center;
   gap: 0.5rem;
   padding: 10px 24px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 14px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.2s ease;
   transform: translateY(0);
-  box-shadow: 0 4px 15px rgba(17, 24, 39, 0.08);
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
   text-decoration: none;
   font-family: inherit;
   user-select: none;
@@ -30,12 +30,12 @@ button:disabled {
   transform: none;
 }
 
-/* Primary Button - Coral Accent */
+/* Primary Button */
 .btn-primary,
 button[type="submit"] {
-  background: linear-gradient(135deg, #ff5872 0%, #ff2d55 100%);
-  color: white;
-  box-shadow: 0 10px 25px rgba(255, 45, 85, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: #1a1a1a;
+  color: #ffffff;
+  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.1);
   position: relative;
 }
 
@@ -47,7 +47,7 @@ button[type="submit"]::before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transition: left 0.5s;
 }
 
@@ -58,85 +58,90 @@ button[type="submit"]:hover:not(:disabled)::before {
 
 .btn-primary:hover:not(:disabled),
 button[type="submit"]:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 30px rgba(255, 45, 85, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  background: #2a2a2a;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.15);
 }
 
 .btn-primary:active:not(:disabled),
 button[type="submit"]:active:not(:disabled) {
-  transform: translateY(0) scale(0.98);
-  box-shadow: 0 4px 12px rgba(255, 45, 85, 0.18), inset 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateY(0);
+  background: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.12);
 }
 
 /* Secondary Button */
 .btn-secondary {
-  background: #ffffff;
-  color: #111827;
-  border: 1.5px solid rgba(229, 231, 235, 0.9);
-  box-shadow: 0 4px 15px rgba(17, 24, 39, 0.05);
+  background: #f5f5f5;
+  color: #1a1a1a;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #f8f5f2;
+  background: #eeeeee;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.08);
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
 }
 
 .btn-secondary:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06);
+  box-shadow: 0 2px 6px rgba(26, 26, 26, 0.08);
 }
 
-/* Success Button - Green */
+/* Success Button - Dark variant */
 .btn-success {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: #10b981;
   color: white;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.15);
 }
 
 .btn-success:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: #059669;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
 }
 
 .btn-success:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
 }
 
-/* Danger Button - Red */
+/* Danger Button - Dark variant */
 .btn-danger {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: #ef4444;
   color: white;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 12px rgba(239, 68, 68, 0.15);
 }
 
 .btn-danger:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: #dc2626;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
 }
 
 .btn-danger:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
 }
 
 /* Size Variants */
 .btn-sm {
   padding: 6px 16px;
-  font-size: 13px;
-  border-radius: 8px;
+  font-size: 12px;
+  border-radius: 6px;
 }
 
 .btn-md {
   padding: 10px 24px;
-  font-size: 15px;
+  font-size: 14px;
+  border-radius: 8px;
 }
 
 .btn-lg {
   padding: 14px 32px;
-  font-size: 16px;
-  border-radius: 14px;
+  font-size: 15px;
+  border-radius: 8px;
 }
 
 /* Icon Button */
