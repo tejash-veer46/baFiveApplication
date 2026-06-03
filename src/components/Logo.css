@@ -59,7 +59,7 @@
 }
 
 .logo-gradient .logo-svg {
-  filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.3));
+  filter: drop-shadow(0 2px 8px rgba(26, 26, 26, 0.1));
 }
 
 /* Smooth animation on mount */
