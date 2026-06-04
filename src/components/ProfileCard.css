@@ -98,22 +98,22 @@
 }
 
 .profile-header h2 {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   margin: 0;
   line-height: 1.2;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.5px;
 }
 
 .profile-badge {
   background-color: #1a1a1a;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
   color: white;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
 
 .profile-info-overlay .department {
