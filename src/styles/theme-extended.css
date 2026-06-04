@@ -5,12 +5,13 @@
 .theme-hinge button[type="submit"] {
   background: #1a1a1a;
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.12);
+  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.1);
 }
 
 .theme-hinge .btn-primary:hover,
 .theme-hinge button[type="submit"]:hover {
   background: #2a2a2a;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.15);
 }
 
 /* Apply primary gradient to buttons */
