@@ -40,16 +40,16 @@
 }
 
 .login-header h1 {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 16px 0 8px;
-  letter-spacing: -0.6px;
+  margin: 16px 0 12px;
+  letter-spacing: -0.8px;
 }
 
 .login-header .subtitle {
-  font-size: 15px;
-  color: #ffffff;
+  font-size: 14px;
+  color: #666666;
   margin: 0;
   font-weight: 400;
   line-height: 1.6;
