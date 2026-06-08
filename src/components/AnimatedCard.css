@@ -1,7 +1,7 @@
 .animated-card {
   position: relative;
   border-radius: 12px;
-  padding: 36px;
+  padding: 40px;
   min-width: 320px;
   max-width: 460px;
   width: 100%;
@@ -9,7 +9,7 @@
   overflow: hidden;
   border: 1px solid #e8e8e8;
   background: #ffffff;
-  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.1);
+  box-shadow: 0 2px 14px rgba(26, 26, 26, 0.11);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   will-change: transform;
 }
