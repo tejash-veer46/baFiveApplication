@@ -11,9 +11,9 @@ button:not([class*="nav"]):not([class*="toggle"]) {
   font-size: 14px;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
   text-decoration: none;
@@ -21,7 +21,7 @@ button:not([class*="nav"]):not([class*="toggle"]) {
   user-select: none;
   outline: none;
   overflow: hidden;
-  will-change: transform;
+  will-change: transform, box-shadow;
 }
 
 button:disabled {
@@ -58,9 +58,9 @@ button[type="submit"]:hover:not(:disabled)::before {
 
 .btn-primary:hover:not(:disabled),
 button[type="submit"]:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   background: #2a2a2a;
-  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.15);
+  box-shadow: 0 6px 20px rgba(26, 26, 26, 0.18);
 }
 
 .btn-primary:active:not(:disabled),
@@ -80,8 +80,9 @@ button[type="submit"]:active:not(:disabled) {
 
 .btn-secondary:hover:not(:disabled) {
   background: #eeeeee;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(26, 26, 26, 0.12);
+  border-color: #d0d0d0;
 }
 
 .btn-secondary:active:not(:disabled) {
@@ -97,9 +98,9 @@ button[type="submit"]:active:not(:disabled) {
 }
 
 .btn-success:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   background: #059669;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
 }
 
 .btn-success:active:not(:disabled) {
@@ -115,9 +116,9 @@ button[type="submit"]:active:not(:disabled) {
 }
 
 .btn-danger:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   background: #dc2626;
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25);
 }
 
 .btn-danger:active:not(:disabled) {
@@ -135,13 +136,13 @@ button[type="submit"]:active:not(:disabled) {
 .btn-md {
   padding: 10px 24px;
   font-size: 14px;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .btn-lg {
   padding: 14px 32px;
   font-size: 15px;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 /* Icon Button */
