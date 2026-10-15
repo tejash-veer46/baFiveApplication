@@ -39,6 +39,13 @@ npm run dev                  # http://localhost:5173
 npm run build                # type-check + production build into dist/
 ```
 
+## Deploying
+
+The site is deployed as a Render static site alongside the API — see
+[DEPLOYMENT.md in backendBaFive](https://github.com/tejash-veer46/backendBaFive/blob/master/DEPLOYMENT.md).
+Set `VITE_API_URL` to the API's public URL at build time. On free hosting the API naps when idle;
+the app shows a "waking up" banner while the first request is slow.
+
 ## Project layout
 
 ```

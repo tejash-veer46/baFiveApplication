@@ -1,4 +1,30 @@
-export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+const rawApiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000').trim().replace(/\/$/, '')
+export const API_URL = /^https?:\/\//.test(rawApiUrl) ? rawApiUrl : `https://${rawApiUrl}`
+
+/*
+ * Free hosting puts the API to sleep when idle; the first request can take ~30-60s.
+ * Requests that take a while flip a "waking up" flag the UI shows as a banner.
+ */
+let pending = 0
+let slowTimer: ReturnType<typeof setTimeout> | undefined
+const setWaking = (waking: boolean) => window.dispatchEvent(new CustomEvent('bafive:waking', { detail: waking }))
+const trackStart = () => {
+  if (pending++ === 0) slowTimer = setTimeout(() => setWaking(true), 3500)
+}
+const trackEnd = () => {
+  if (--pending === 0) {
+    clearTimeout(slowTimer)
+    setWaking(false)
+  }
+}
+
+/** Fire-and-forget ping so the API starts waking while the page loads. */
+export const warmUp = () => {
+  trackStart()
+  fetch(API_URL + '/health')
+    .catch(() => {})
+    .finally(trackEnd)
+}
 
 export type Gender = 'man' | 'woman' | 'nonbinary'
 export type Preference = 'men' | 'women' | 'everyone'
@@ -104,6 +130,7 @@ export class ApiError extends Error {
 async function request<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
   const token = tokenStore.get()
   let res: Response
+  trackStart()
   try {
     res = await fetch(API_URL + path, {
       method: options.method || 'GET',
@@ -115,6 +142,8 @@ async function request<T>(path: string, options: { method?: string; body?: unkno
     })
   } catch {
     throw new ApiError(0, "Can't reach baFive right now. Check your connection and try again.")
+  } finally {
+    trackEnd()
   }
   if (res.status === 204) return undefined as T
   const data = await res.json().catch(() => ({}))

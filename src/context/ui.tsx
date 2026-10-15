@@ -104,3 +104,30 @@ export function SummaryProvider({ children }: { children: ReactNode }) {
   return <SummaryContext.Provider value={{ summary, refresh }}>{children}</SummaryContext.Provider>
 }
 export const useSummary = () => useContext(SummaryContext)
+
+/* ---------------- Server wake-up banner ---------------- */
+export function WakingBanner() {
+  const [waking, setWaking] = useState(false)
+  useEffect(() => {
+    const on = (e: Event) => setWaking((e as CustomEvent<boolean>).detail)
+    window.addEventListener('bafive:waking', on)
+    return () => window.removeEventListener('bafive:waking', on)
+  }, [])
+  return (
+    <AnimatePresence>
+      {waking && (
+        <motion.div
+          className="waking"
+          role="status"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        >
+          <span className="waking-dot" />
+          Waking up baFive's server — this can take up to a minute after a quiet spell ☕
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
