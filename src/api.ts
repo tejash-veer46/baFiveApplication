@@ -9,7 +9,7 @@ let pending = 0
 let slowTimer: ReturnType<typeof setTimeout> | undefined
 const setWaking = (waking: boolean) => window.dispatchEvent(new CustomEvent('bafive:waking', { detail: waking }))
 const trackStart = () => {
-  if (pending++ === 0) slowTimer = setTimeout(() => setWaking(true), 3500)
+  if (pending++ === 0) slowTimer = setTimeout(() => setWaking(true), 8000)
 }
 const trackEnd = () => {
   if (--pending === 0) {
