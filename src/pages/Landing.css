@@ -180,6 +180,72 @@
   font-weight: 600;
   font-size: 14px;
 }
+.auth-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.auth-head h2 {
+  margin: 4px 0 0;
+  font-size: 22px;
+}
+.auth-head p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.auth-head b {
+  color: var(--ink);
+  word-break: break-all;
+}
+.auth-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.auth-back:hover {
+  color: var(--ink);
+}
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.auth-link {
+  font: inherit;
+  font-weight: 700;
+  color: var(--brand);
+  padding: 0;
+}
+.auth-link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+.auth-link:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+.code-input {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  font-variant-numeric: tabular-nums;
+}
+.auth-note {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+}
 .auth-fine {
   margin: 0;
   font-size: 12px;

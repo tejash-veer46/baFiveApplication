@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { ArrowRight, Heart, Moon, Sun } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Heart, Moon, Sun } from 'lucide-react'
+import { api, ApiError, type Me } from '../api'
 import Logo from '../components/Logo'
 import { useAuth } from '../context/auth'
 import { useTheme } from '../context/ui'
@@ -92,31 +93,118 @@ function CollageCard({
   )
 }
 
+type View = 'signup' | 'login' | 'verify' | 'forgot' | 'reset'
+
+/** Seconds left before another code can be requested. */
+function useCooldown() {
+  const [until, setUntil] = useState(0)
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    if (until <= now) return
+    const t = setTimeout(() => setNow(Date.now()), 1000)
+    return () => clearTimeout(t)
+  }, [until, now])
+  return {
+    left: Math.max(0, Math.ceil((until - now) / 1000)),
+    start: (seconds: number) => {
+      setNow(Date.now())
+      setUntil(Date.now() + seconds * 1000)
+    },
+  }
+}
+
+const HEADINGS: Partial<Record<View, string>> = {
+  verify: 'Check your email',
+  forgot: 'Forgot your password?',
+  reset: 'Choose a new password',
+}
+
+const BUTTON_LABELS: Record<View, string> = {
+  signup: 'Get started',
+  login: 'Welcome back',
+  verify: 'Verify email',
+  forgot: 'Send reset code',
+  reset: 'Save and sign in',
+}
+
 function AuthCard() {
-  const { login, signup } = useAuth()
+  const { login, signup, verifyEmail, resetPassword } = useAuth()
   const navigate = useNavigate()
-  const [mode, setMode] = useState<'signup' | 'login'>('signup')
+  const [view, setView] = useState<View>('signup')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [code, setCode] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
   const [shake, setShake] = useState(0)
+  const cooldown = useCooldown()
+
+  const go = (next: View, message = '') => {
+    setView(next)
+    setError('')
+    setNotice(message)
+    setCode('')
+  }
+  const enter = (user: Me) => navigate(user.onboarded ? '/discover' : '/onboarding', { replace: true })
+  const fail = (err: unknown) => {
+    setError((err as Error).message)
+    setShake((s) => s + 1)
+  }
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
     setBusy(true)
     try {
-      const user = mode === 'signup' ? await signup(name, email, password) : await login(email, password)
-      navigate(user.onboarded ? '/discover' : '/onboarding', { replace: true })
+      if (view === 'signup') {
+        const res = await signup(name, email, password)
+        setEmail(res.email)
+        go('verify', res.codeSent ? '' : "We couldn't send the email just now. Tap “resend code” to try again.")
+        cooldown.start(res.codeSent ? 60 : 0)
+      } else if (view === 'login') {
+        try {
+          enter(await login(email, password))
+        } catch (err) {
+          const details = err instanceof ApiError ? err.details : {}
+          if (!details.needsVerification) throw err
+          if (details.email) setEmail(details.email)
+          go('verify', (err as Error).message)
+          cooldown.start(details.codeSent ? 60 : 0)
+        }
+      } else if (view === 'verify') {
+        enter(await verifyEmail(email, code))
+      } else if (view === 'forgot') {
+        await api.forgotPassword(email)
+        go('reset')
+        cooldown.start(60)
+      } else {
+        enter(await resetPassword(email, code, newPassword))
+      }
     } catch (err) {
-      setError((err as Error).message)
-      setShake((s) => s + 1)
+      fail(err)
     } finally {
       setBusy(false)
     }
   }
+
+  const resend = async () => {
+    setError('')
+    setNotice('')
+    try {
+      await (view === 'verify' ? api.resendCode(email) : api.forgotPassword(email))
+      setNotice('We sent you a new code.')
+      cooldown.start(60)
+    } catch (err) {
+      const retryAfter = err instanceof ApiError ? err.details.retryAfter : undefined
+      if (retryAfter) cooldown.start(retryAfter)
+      fail(err)
+    }
+  }
+
+  const isCodeView = view === 'verify' || view === 'reset'
 
   return (
     <motion.form
@@ -126,25 +214,39 @@ function AuthCard() {
       animate={shake ? { x: [0, -10, 10, -6, 6, 0] } : undefined}
       transition={{ duration: 0.4 }}
     >
-      <div className="seg">
-        {(['signup', 'login'] as const).map((m) => (
-          <button
-            type="button"
-            key={m}
-            className={`seg-btn ${mode === m ? 'on' : ''}`}
-            onClick={() => {
-              setMode(m)
-              setError('')
-            }}
-          >
-            {mode === m && <motion.span layoutId="seg-pill" className="seg-pill" transition={{ type: 'spring', stiffness: 500, damping: 35 }} />}
-            <span>{m === 'signup' ? 'Create account' : 'Sign in'}</span>
+      {view === 'signup' || view === 'login' ? (
+        <div className="seg">
+          {(['signup', 'login'] as const).map((m) => (
+            <button type="button" key={m} className={`seg-btn ${view === m ? 'on' : ''}`} onClick={() => go(m)}>
+              {view === m && <motion.span layoutId="seg-pill" className="seg-pill" transition={{ type: 'spring', stiffness: 500, damping: 35 }} />}
+              <span>{m === 'signup' ? 'Create account' : 'Sign in'}</span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <motion.div className="auth-head" key={view} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }}>
+          <button type="button" className="auth-back" onClick={() => go('login')}>
+            <ArrowLeft size={16} /> Back to sign in
           </button>
-        ))}
-      </div>
+          <h2>{HEADINGS[view]}</h2>
+          <p>
+            {view === 'verify' && (
+              <>
+                Enter the 6-digit code we sent to <b>{email}</b> to confirm it's really you.
+              </>
+            )}
+            {view === 'forgot' && "Enter your account's email and we'll send you a code to reset your password."}
+            {view === 'reset' && (
+              <>
+                If <b>{email}</b> has a baFive account, we've emailed it a 6-digit code.
+              </>
+            )}
+          </p>
+        </motion.div>
+      )}
 
       <AnimatePresence initial={false}>
-        {mode === 'signup' && (
+        {view === 'signup' && (
           <motion.label
             className="field"
             initial={{ opacity: 0, height: 0 }}
@@ -156,25 +258,72 @@ function AuthCard() {
           </motion.label>
         )}
       </AnimatePresence>
-      <label className="field">
-        <span>Email</span>
-        <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" required />
-      </label>
-      <label className="field">
-        <span>Password</span>
-        <input
-          className="input"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={mode === 'signup' ? 'At least 6 characters' : 'Your password'}
-          autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-          minLength={6}
-          required
-        />
-      </label>
+      {(view === 'signup' || view === 'login' || view === 'forgot') && (
+        <label className="field">
+          <span>Email</span>
+          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" required />
+        </label>
+      )}
+      {(view === 'signup' || view === 'login') && (
+        <div className="field">
+          <span className="field-row">
+            <label htmlFor="auth-password">Password</label>
+            {view === 'login' && (
+              <button type="button" className="auth-link" onClick={() => go('forgot')}>
+                Forgot password?
+              </button>
+            )}
+          </span>
+          <input
+            id="auth-password"
+            className="input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={view === 'signup' ? 'At least 6 characters' : 'Your password'}
+            autoComplete={view === 'signup' ? 'new-password' : 'current-password'}
+            minLength={6}
+            required
+          />
+        </div>
+      )}
+      {isCodeView && (
+        <label className="field">
+          <span>6-digit code</span>
+          <input
+            className="input code-input"
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            placeholder="••••••"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            autoFocus
+            required
+          />
+        </label>
+      )}
+      {view === 'reset' && (
+        <label className="field">
+          <span>New password</span>
+          <input
+            className="input"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="At least 6 characters"
+            autoComplete="new-password"
+            minLength={6}
+            required
+          />
+        </label>
+      )}
 
       <AnimatePresence>
+        {notice && !error && (
+          <motion.p className="auth-note" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            {notice}
+          </motion.p>
+        )}
         {error && (
           <motion.p className="auth-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             {error}
@@ -182,11 +331,20 @@ function AuthCard() {
         )}
       </AnimatePresence>
 
-      <button className="btn btn-grad btn-block" disabled={busy}>
-        {busy ? <span className="spinner spinner-sm" /> : mode === 'signup' ? 'Get started' : 'Welcome back'}
+      <button className="btn btn-grad btn-block" disabled={busy || (isCodeView && code.length !== 6)}>
+        {busy ? <span className="spinner spinner-sm" /> : BUTTON_LABELS[view]}
         {!busy && <ArrowRight size={18} />}
       </button>
-      <p className="auth-fine">By continuing you confirm you're 18+ and agree to be kind.</p>
+      {isCodeView ? (
+        <p className="auth-fine">
+          Didn't get it? Check your spam folder or{' '}
+          <button type="button" className="auth-link" onClick={resend} disabled={cooldown.left > 0}>
+            {cooldown.left > 0 ? `resend in ${cooldown.left}s` : 'resend code'}
+          </button>
+        </p>
+      ) : (
+        <p className="auth-fine">By continuing you confirm you're 18+ and agree to be kind.</p>
+      )}
     </motion.form>
   )
 }

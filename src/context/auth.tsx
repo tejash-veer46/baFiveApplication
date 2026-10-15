@@ -1,11 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
-import { api, tokenStore, type Me } from '../api'
+import { api, tokenStore, type Me, type SignupResult } from '../api'
 
 interface AuthState {
   user: Me | null
   loading: boolean
   login: (email: string, password: string) => Promise<Me>
-  signup: (name: string, email: string, password: string) => Promise<Me>
+  /** Creates an unverified account; the user then enters the emailed code via verifyEmail. */
+  signup: (name: string, email: string, password: string) => Promise<SignupResult>
+  verifyEmail: (email: string, code: string) => Promise<Me>
+  resetPassword: (email: string, code: string, newPassword: string) => Promise<Me>
   logout: () => void
   setUser: (u: Me) => void
 }
@@ -35,22 +38,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('bafive:unauthorized', logout)
   }, [logout])
 
-  const login = async (email: string, password: string) => {
-    const { token, user } = await api.login({ email, password })
+  const signIn = async (session: Promise<{ token: string; user: Me }>) => {
+    const { token, user } = await session
     tokenStore.set(token)
     setUser(user)
     return user
   }
 
-  const signup = async (name: string, email: string, password: string) => {
-    const { token, user } = await api.signup({ name, email, password })
-    tokenStore.set(token)
-    setUser(user)
-    return user
-  }
+  const login = (email: string, password: string) => signIn(api.login({ email, password }))
+  const signup = (name: string, email: string, password: string) => api.signup({ name, email, password })
+  const verifyEmail = (email: string, code: string) => signIn(api.verifyEmail({ email, code }))
+  const resetPassword = (email: string, code: string, newPassword: string) =>
+    signIn(api.resetPassword({ email, code, newPassword }))
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, setUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading, login, signup, verifyEmail, resetPassword, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 

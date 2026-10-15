@@ -121,10 +121,24 @@ export const tokenStore = {
   clear: () => localStorage.removeItem(TOKEN_KEY),
 }
 
+/** Extra fields some errors carry, e.g. a 403 login for an unverified email or a 429 resend. */
+export interface ErrorDetails {
+  needsVerification?: boolean
+  email?: string
+  codeSent?: boolean
+  retryAfter?: number
+}
+
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(public status: number, message: string, public details: ErrorDetails = {}) {
     super(message)
   }
+}
+
+export interface SignupResult {
+  needsVerification: true
+  email: string
+  codeSent: boolean
 }
 
 async function request<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
@@ -149,14 +163,21 @@ async function request<T>(path: string, options: { method?: string; body?: unkno
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
     if (res.status === 401 && token) window.dispatchEvent(new Event('bafive:unauthorized'))
-    throw new ApiError(res.status, data.error || `Request failed (${res.status})`)
+    const { error, ...details } = data
+    throw new ApiError(res.status, error || `Request failed (${res.status})`, details)
   }
   return data as T
 }
 
 export const api = {
   signup: (body: { name: string; email: string; password: string }) =>
-    request<{ token: string; user: Me }>('/api/auth/signup', { method: 'POST', body }),
+    request<SignupResult>('/api/auth/signup', { method: 'POST', body }),
+  verifyEmail: (body: { email: string; code: string }) =>
+    request<{ token: string; user: Me }>('/api/auth/verify-email', { method: 'POST', body }),
+  resendCode: (email: string) => request<{ ok: true }>('/api/auth/resend-code', { method: 'POST', body: { email } }),
+  forgotPassword: (email: string) => request<{ ok: true }>('/api/auth/forgot-password', { method: 'POST', body: { email } }),
+  resetPassword: (body: { email: string; code: string; newPassword: string }) =>
+    request<{ token: string; user: Me }>('/api/auth/reset-password', { method: 'POST', body }),
   login: (body: { email: string; password: string }) =>
     request<{ token: string; user: Me }>('/api/auth/login', { method: 'POST', body }),
   me: () => request<Me>('/api/auth/me'),
