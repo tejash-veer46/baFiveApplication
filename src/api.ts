@@ -1,0 +1,161 @@
+export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+
+export type Gender = 'man' | 'woman' | 'nonbinary'
+export type Preference = 'men' | 'women' | 'everyone'
+
+export interface Prompt {
+  question: string
+  answer: string
+}
+
+export interface Profile {
+  id: number
+  name: string
+  age: number | null
+  gender: Gender | null
+  pronouns: string | null
+  department: string | null
+  jobTitle: string | null
+  hometown: string | null
+  heightCm: number | null
+  bio: string | null
+  photos: string[]
+  prompts: Prompt[]
+  interests: string[]
+  sharedInterests: string[]
+  activeRecently: boolean
+}
+
+export interface Me extends Profile {
+  email: string
+  birthdate: string | null
+  interestedIn: Preference
+  onboarded: boolean
+}
+
+export type ProfileUpdate = Partial<{
+  name: string
+  birthdate: string
+  gender: Gender
+  interestedIn: Preference
+  pronouns: string | null
+  department: string | null
+  jobTitle: string | null
+  hometown: string | null
+  heightCm: number | null
+  bio: string | null
+  photos: string[]
+  prompts: Prompt[]
+  interests: string[]
+}>
+
+export type LikeTarget = { type: 'photo' | 'prompt'; index: number }
+
+export interface ReceivedLike {
+  likeId: number
+  comment: string | null
+  isRose: boolean
+  likedAt: string
+  target: { type: 'photo' | 'prompt' | 'profile'; index: number | null; photo: string | null; prompt: Prompt | null }
+  profile: Profile
+}
+
+export interface Message {
+  id: number
+  senderId: number
+  body: string
+  createdAt: string
+  readAt: string | null
+}
+
+export interface MatchSummary {
+  id: number
+  createdAt: string
+  unread: number
+  lastMessage: Message | null
+  profile: Profile
+}
+
+export interface LikeResult {
+  matched: boolean
+  matchId?: number
+  profile?: Profile
+}
+
+export interface Summary {
+  likes: number
+  unread: number
+  roses: number
+}
+
+const TOKEN_KEY = 'bafive-token'
+export const tokenStore = {
+  get: () => localStorage.getItem(TOKEN_KEY),
+  set: (t: string) => localStorage.setItem(TOKEN_KEY, t),
+  clear: () => localStorage.removeItem(TOKEN_KEY),
+}
+
+export class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message)
+  }
+}
+
+async function request<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
+  const token = tokenStore.get()
+  let res: Response
+  try {
+    res = await fetch(API_URL + path, {
+      method: options.method || 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    })
+  } catch {
+    throw new ApiError(0, "Can't reach baFive right now. Check your connection and try again.")
+  }
+  if (res.status === 204) return undefined as T
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    if (res.status === 401 && token) window.dispatchEvent(new Event('bafive:unauthorized'))
+    throw new ApiError(res.status, data.error || `Request failed (${res.status})`)
+  }
+  return data as T
+}
+
+export const api = {
+  signup: (body: { name: string; email: string; password: string }) =>
+    request<{ token: string; user: Me }>('/api/auth/signup', { method: 'POST', body }),
+  login: (body: { email: string; password: string }) =>
+    request<{ token: string; user: Me }>('/api/auth/login', { method: 'POST', body }),
+  me: () => request<Me>('/api/auth/me'),
+  updateMe: (body: ProfileUpdate) => request<Me>('/api/auth/me', { method: 'PUT', body }),
+  deleteMe: () => request<void>('/api/auth/me', { method: 'DELETE' }),
+
+  discover: (limit = 10) => request<Profile[]>(`/api/discover?limit=${limit}`),
+  profile: (id: number) => request<Profile>(`/api/profiles/${id}`),
+  like: (userId: number, opts: { target?: LikeTarget; comment?: string; rose?: boolean } = {}) =>
+    request<LikeResult>('/api/likes', {
+      method: 'POST',
+      body: {
+        userId,
+        targetType: opts.target?.type,
+        targetIndex: opts.target?.index,
+        comment: opts.comment,
+        rose: opts.rose,
+      },
+    }),
+  pass: (userId: number) => request<{ ok: true }>('/api/passes', { method: 'POST', body: { userId } }),
+  unpass: (userId: number) => request<void>(`/api/passes/${userId}`, { method: 'DELETE' }),
+  receivedLikes: () => request<ReceivedLike[]>('/api/likes/received'),
+  summary: () => request<Summary>('/api/summary'),
+
+  matches: () => request<MatchSummary[]>('/api/matches'),
+  match: (id: number) => request<{ id: number; createdAt: string; profile: Profile }>(`/api/matches/${id}`),
+  unmatch: (id: number) => request<void>(`/api/matches/${id}`, { method: 'DELETE' }),
+  messages: (matchId: number, after = 0) => request<Message[]>(`/api/matches/${matchId}/messages?after=${after}`),
+  send: (matchId: number, body: string) =>
+    request<Message>(`/api/matches/${matchId}/messages`, { method: 'POST', body: { body } }),
+}
