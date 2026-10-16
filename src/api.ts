@@ -135,11 +135,10 @@ export class ApiError extends Error {
   }
 }
 
-export interface SignupResult {
-  needsVerification: true
-  email: string
-  codeSent: boolean
-}
+/** With email codes on, signup asks for the emailed code; with them off it signs in straight away. */
+export type SignupResult =
+  | { needsVerification: true; email: string; codeSent: boolean }
+  | { needsVerification?: undefined; token: string; user: Me }
 
 async function request<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
   const token = tokenStore.get()

@@ -5,8 +5,8 @@ interface AuthState {
   user: Me | null
   loading: boolean
   login: (email: string, password: string) => Promise<Me>
-  /** Creates an unverified account; the user then enters the emailed code via verifyEmail. */
-  signup: (name: string, email: string, password: string) => Promise<SignupResult>
+  /** Creates an account. Returns the signed-in user, or what's needed to enter the emailed code via verifyEmail. */
+  signup: (name: string, email: string, password: string) => Promise<Me | { email: string; codeSent: boolean }>
   verifyEmail: (email: string, code: string) => Promise<Me>
   resetPassword: (email: string, code: string, newPassword: string) => Promise<Me>
   logout: () => void
@@ -46,7 +46,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const login = (email: string, password: string) => signIn(api.login({ email, password }))
-  const signup = (name: string, email: string, password: string) => api.signup({ name, email, password })
+  const signup = async (name: string, email: string, password: string) => {
+    const res: SignupResult = await api.signup({ name, email, password })
+    return res.needsVerification ? { email: res.email, codeSent: res.codeSent } : signIn(Promise.resolve(res))
+  }
   const verifyEmail = (email: string, code: string) => signIn(api.verifyEmail({ email, code }))
   const resetPassword = (email: string, code: string, newPassword: string) =>
     signIn(api.resetPassword({ email, code, newPassword }))

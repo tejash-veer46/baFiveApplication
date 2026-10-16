@@ -161,6 +161,7 @@ function AuthCard() {
     try {
       if (view === 'signup') {
         const res = await signup(name, email, password)
+        if ('id' in res) return enter(res)
         setEmail(res.email)
         go('verify', res.codeSent ? '' : "We couldn't send the email just now. Tap “resend code” to try again.")
         cooldown.start(res.codeSent ? 60 : 0)
