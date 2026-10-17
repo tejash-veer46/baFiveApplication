@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Heart, MessageCircle } from 'lucide-react'
 import type { Profile } from '../api'
 import { firstName } from '../utils'
+import { pickupLines } from '../pickupLines'
 
 interface Props {
   match: { matchId: number; profile: Profile } | null
@@ -64,6 +65,9 @@ export default function MatchCelebration({ match, myPhoto, onMessage, onClose }:
               It's a match!
             </motion.h2>
             <p className="celebrate-sub">You and {firstName(match.profile.name)} liked each other.</p>
+            <p className="celebrate-line">
+              Stuck for words? Try: “{pickupLines(firstName(match.profile.name), match.matchId * 31, 1)[0]}”
+            </p>
 
             <div className="celebrate-photos">
               <motion.img

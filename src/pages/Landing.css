@@ -1,134 +1,372 @@
-.landing {
-  --gx: 50vw;
-  --gy: 40vh;
+/* Login page: "Neon After Dark". ba5 = before & after five.
+   Colours come from --n1 / --n2 / --nwall / --nbg, set inline from the chosen sign colour. */
+.neon {
+  --surface: rgba(12, 9, 20, 0.78);
+  --surface-2: rgba(255, 255, 255, 0.07);
+  --ink: #fdf7ff;
+  --ink-2: #e6dcef;
+  --muted: #b5a7c4;
+  --line: rgba(255, 255, 255, 0.14);
+  --brand: var(--n1);
+  --grad: linear-gradient(90deg, var(--n1), var(--n2));
+  --grad-soft: rgba(255, 255, 255, 0.06);
+  --glow: 0 0 22px var(--n1);
+  --shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+  --shadow-sm: none;
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
-  padding: 0 clamp(18px, 5vw, 64px) 48px;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(1200px 700px at 30% 40%, var(--nwall) 0%, var(--nbg) 70%);
+  background-color: var(--nbg);
+  color: var(--ink);
+  font-family: 'Syne', var(--sans);
+  color-scheme: dark;
+  transition: background-color 0.4s;
 }
-
-.landing-blobs {
+.neon-grid {
   position: absolute;
   inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
   pointer-events: none;
-  z-index: 0;
 }
-.blob {
+.neon-glow {
   position: absolute;
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 640px;
+  margin: -320px 0 0 -320px;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
-  animation: drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, color-mix(in srgb, var(--n1) 34%, transparent) 0%, transparent 60%);
+  z-index: 3;
+  will-change: transform, opacity;
 }
-.b1 {
-  width: 520px;
-  height: 520px;
-  background: #ff4f6d;
-  top: -160px;
-  right: 8%;
-  opacity: 0.35;
-}
-.b2 {
-  width: 460px;
-  height: 460px;
-  background: #7c5cff;
-  bottom: -180px;
-  right: -80px;
-  opacity: 0.32;
-  animation-delay: -6s;
-}
-.b3 {
-  width: 360px;
-  height: 360px;
-  background: #ffb627;
-  bottom: 10%;
-  left: -140px;
-  opacity: 0.22;
-  animation-delay: -12s;
-}
-:root[data-theme='dark'] .blob {
-  opacity: 0.28;
-}
-.cursor-glow {
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  left: calc(var(--gx) - 210px);
-  top: calc(var(--gy) - 210px);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 79, 109, 0.22), rgba(124, 92, 255, 0.12) 45%, transparent 70%);
-  transition: left 0.25s var(--ease), top 0.25s var(--ease);
-}
-@keyframes drift {
-  to {
-    transform: translate(60px, 40px) scale(1.12);
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  .neon-glow {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
   }
 }
+.repel {
+  will-change: transform;
+}
 
-.landing-top {
+/* Header */
+.neon-top {
   position: relative;
   z-index: 2;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  padding: 22px 0;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 64px;
+  font-family: 'Space Mono', ui-monospace, monospace;
+}
+.neon-logo {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  color: var(--n1);
+  text-shadow: 0 0 8px var(--n1), 0 0 24px var(--n1);
+}
+.neon-swatches {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.neon-swatch-label {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.neon-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--s1);
+  background: var(--nbg);
+  box-shadow: 0 0 10px var(--s1), inset 0 0 10px var(--s2);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.neon-swatch:hover {
+  transform: scale(1.1);
+}
+.neon-swatch.on {
+  box-shadow: 0 0 10px var(--s1), inset 0 0 10px var(--s2), 0 0 0 3px var(--nbg), 0 0 0 5px rgba(255, 255, 255, 0.75);
+}
+.neon-swatch:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
 }
 
-.landing-grid {
+/* Layout: copy and sign-up on the right, the sign on the left (below the form on phones) */
+.neon-main {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
-  gap: 40px;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  min-height: calc(100vh - 140px);
-  max-width: 1280px;
-  margin: 0 auto;
+  gap: 48px;
+  padding: 0 64px 56px;
+}
+.neon-copy {
+  flex: 1 1 400px;
+  max-width: 470px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.neon-sign {
+  order: -1;
+  flex: 1.2 1 520px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.neon-eyebrow {
+  margin: 0;
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--n1);
+}
+.neon-copy h1 {
+  margin: 0;
+  font-family: 'Syne', var(--sans);
+  font-size: clamp(38px, 4.2vw, 56px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+.neon-copy h1 em {
+  font-style: normal;
+  color: var(--n2);
+  text-shadow: 0 0 24px var(--n2);
+}
+.neon-lede {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
-.eyebrow {
-  display: inline-flex;
+/* The sign: three rows, so words and chips never sit on top of each other */
+.ns-row {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+.ns-mid {
+  justify-content: center;
+  gap: 8px 40px;
+  margin: 8px 0;
+}
+.ns-word {
+  font-size: clamp(40px, 4.6vw, 80px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  animation: neon-hum 3s ease-in-out infinite;
+}
+.ns-before {
+  text-shadow: 0 0 6px #fff, 0 0 18px var(--n1), 0 0 42px var(--n1), 0 0 90px var(--n1);
+}
+.ns-after {
+  text-shadow: 0 0 6px #fff, 0 0 18px var(--n2), 0 0 42px var(--n2), 0 0 90px var(--n2);
+  animation-duration: 3.4s;
+}
+.ns-five {
+  font-size: clamp(150px, 17vw, 260px);
+  font-weight: 800;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 4px var(--n2);
+  filter: drop-shadow(0 0 14px var(--n2)) drop-shadow(0 0 40px var(--n2));
+  animation: neon-flicker 7s infinite;
+}
+.ns-chip {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: 'Space Mono', ui-monospace, monospace;
   font-size: 13px;
-  font-weight: 700;
-  margin: 0 0 22px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.35);
 }
-.eyebrow-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 0 4px rgba(34, 201, 147, 0.2);
-  animation: pulse 2s infinite;
+.ns-chip-1 {
+  border: 2px solid var(--n1);
+  color: var(--n1);
+  box-shadow: 0 0 12px var(--n1), inset 0 0 12px var(--n1);
 }
-@keyframes pulse {
+.ns-chip-2 {
+  border: 2px solid var(--n2);
+  color: var(--n2);
+  box-shadow: 0 0 12px var(--n2), inset 0 0 12px var(--n2);
+}
+.ns-card {
+  max-width: 230px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+}
+.ns-card b {
+  font-weight: 800;
+}
+.ns-card span {
+  color: var(--n1);
+}
+.ns-card p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+@keyframes neon-hum {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
   50% {
-    box-shadow: 0 0 0 8px rgba(34, 201, 147, 0);
+    filter: brightness(1.2);
+  }
+}
+@keyframes neon-flicker {
+  0%,
+  18%,
+  22%,
+  25%,
+  53%,
+  57%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  24%,
+  55% {
+    opacity: 0.55;
   }
 }
 
-.landing-copy h1 {
-  font-size: clamp(42px, 6vw, 72px);
-  line-height: 1.02;
-  font-weight: 600;
-  margin-bottom: 18px;
+/* Sign-up card, restyled for the neon wall */
+.neon .auth {
+  max-width: none;
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 0 60px -20px var(--n1);
 }
-.landing-copy h1 em {
-  font-style: italic;
-  padding-right: 4px;
+.neon .seg {
+  background: rgba(255, 255, 255, 0.06);
 }
-.lede {
-  font-size: 17px;
-  color: var(--muted);
-  max-width: 460px;
-  margin: 0 0 28px;
+.neon .seg-pill {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px var(--n2), 0 0 14px var(--n2);
+}
+.neon .seg-btn.on {
+  color: var(--n2);
+}
+.neon .input {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.neon .input:focus {
+  border-color: var(--n2);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08), 0 0 14px var(--n2);
+}
+.neon .input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #160f22 inset;
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
+}
+.neon .btn-grad {
+  background: var(--n1);
+  color: #0b0710;
+  box-shadow: 0 0 22px var(--n1);
+  font-weight: 800;
+}
+.neon .btn-grad:hover:not(:disabled) {
+  box-shadow: 0 0 34px var(--n1);
+}
+.neon .spinner-sm {
+  border-color: rgba(11, 7, 16, 0.3);
+  border-top-color: #0b0710;
+}
+.neon .auth-link {
+  color: var(--n2);
+}
+.neon .auth-error {
+  background: rgba(255, 90, 90, 0.14);
+  color: #ffc4c4;
 }
 
+@media (max-width: 900px) {
+  .neon-top {
+    padding: 20px 20px;
+  }
+  .neon-main {
+    padding: 0 20px 40px;
+    gap: 40px;
+  }
+  .neon-copy {
+    max-width: 560px;
+    margin: 0 auto;
+    flex-basis: 100%;
+  }
+  .neon-sign {
+    order: 0;
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 520px) {
+  .neon-swatch-label {
+    display: none;
+  }
+  .neon-top {
+    padding: 16px;
+  }
+  .neon-main {
+    padding: 0 16px 32px;
+  }
+  .neon-lede {
+    font-size: 16px;
+  }
+  .ns-chip {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+  .ns-five {
+    -webkit-text-stroke-width: 3px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ns-word,
+  .ns-five {
+    animation: none;
+  }
+  .neon-glow {
+    display: none;
+  }
+}
+
+/* Sign-up card */
 .auth {
   padding: 22px;
   display: flex;
@@ -260,138 +498,3 @@
   border-top-color: #fff;
 }
 
-.landing-points {
-  list-style: none;
-  padding: 0;
-  margin: 26px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-2);
-}
-.landing-points b {
-  margin-right: 4px;
-}
-
-/* ---------- Collage ---------- */
-.collage {
-  position: relative;
-  height: 640px;
-  perspective: 1200px;
-  display: grid;
-  place-items: center;
-}
-.collage-card {
-  position: absolute;
-  margin: 0;
-  width: 200px;
-  aspect-ratio: 4 / 5;
-  border-radius: 24px;
-  overflow: hidden;
-  background: var(--surface);
-  box-shadow: var(--shadow-lg);
-  border: 5px solid var(--surface);
-  transform-style: preserve-3d;
-  cursor: pointer;
-}
-.collage-card.main {
-  width: 260px;
-}
-.collage-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.collage-card figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 30px 14px 12px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-  color: #fff;
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 600;
-}
-.collage-bubble {
-  position: absolute;
-  z-index: 12;
-  left: calc(50% + 40px);
-  top: calc(50% + 40px);
-  width: 250px;
-  padding: 16px 18px;
-  border-radius: 20px;
-  background: var(--surface);
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.collage-bubble-q {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-}
-.collage-bubble-a {
-  font-family: var(--serif);
-  font-size: 18px;
-  line-height: 1.25;
-}
-.collage-bubble-heart {
-  position: absolute;
-  right: -12px;
-  bottom: -12px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--grad);
-  color: #fff;
-  box-shadow: var(--glow);
-}
-.collage-match {
-  position: absolute;
-  z-index: 12;
-  top: calc(50% - 250px);
-  left: calc(50% - 230px);
-  padding: 12px 20px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 20px;
-  font-weight: 600;
-  box-shadow: var(--shadow-lg);
-}
-
-@media (max-width: 980px) {
-  .landing-grid {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-  .collage {
-    order: -1;
-    height: 420px;
-    transform: scale(0.62);
-    margin: -10px 0 0;
-  }
-  .collage-bubble,
-  .collage-match {
-    display: none;
-  }
-  .auth {
-    max-width: none;
-  }
-}
-@media (max-width: 520px) {
-  .collage {
-    height: 340px;
-    transform: scale(0.5);
-    margin: -10px 0 0;
-  }
-}

@@ -1,13 +1,14 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, MessageCircleHeart, MoreHorizontal, Send, UserRound, UserX } from 'lucide-react'
+import { ArrowLeft, MessageCircleHeart, MoreHorizontal, Send, Shuffle, Sparkles, UserRound, UserX } from 'lucide-react'
 import Modal from '../components/Modal'
 import ProfileView from '../components/ProfileView'
 import { api, type MatchSummary, type Message, type Profile } from '../api'
 import { useMe } from '../context/auth'
 import { useSummary, useToast } from '../context/ui'
 import { clockTime, dayLabel, firstName, timeAgo } from '../utils'
+import { pickupLines } from '../pickupLines'
 import './Matches.css'
 
 export default function Matches() {
@@ -143,6 +144,28 @@ function openers(p: Profile) {
   return out.slice(0, 3)
 }
 
+function PickupLines({ lines, onPick, onShuffle }: { lines: string[]; onPick: (line: string) => void; onShuffle: () => void }) {
+  return (
+    <div className="chat-lines">
+      <div className="chat-lines-head">
+        <span>
+          <Sparkles size={15} /> Corny pickup lines
+        </span>
+        <button type="button" className="chat-shuffle" onClick={onShuffle}>
+          <Shuffle size={15} /> Shuffle
+        </button>
+      </div>
+      <div className="chat-openers">
+        {lines.map((line) => (
+          <button type="button" key={line} className="chat-opener corny" onClick={() => onPick(line)}>
+            {line}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
   const { me } = useMe()
   const { refresh } = useSummary()
@@ -155,6 +178,8 @@ function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
   const [showProfile, setShowProfile] = useState(false)
   const [menu, setMenu] = useState(false)
   const [confirmUnmatch, setConfirmUnmatch] = useState(false)
+  const [lineSeed, setLineSeed] = useState(0)
+  const [showLines, setShowLines] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
   const input = useRef<HTMLTextAreaElement>(null)
   const lastId = useRef(0)
@@ -222,6 +247,19 @@ function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
     onGone()
   }
 
+  /** Puts a suggested line in the message box so it can be edited before sending. */
+  const pickLine = (line: string) => {
+    setText(line)
+    setShowLines(false)
+    requestAnimationFrame(() => {
+      const el = input.current
+      if (!el) return
+      el.focus()
+      el.style.height = 'auto'
+      el.style.height = Math.min(el.scrollHeight, 140) + 'px'
+    })
+  }
+
   if (!profile) {
     return (
       <div className="center-fill">
@@ -275,6 +313,7 @@ function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
                 </button>
               ))}
             </div>
+            <PickupLines lines={pickupLines(firstName(profile.name), matchId * 31 + lineSeed)} onPick={pickLine} onShuffle={() => setLineSeed((s) => s + 1)} />
           </motion.div>
         )}
         <AnimatePresence initial={false}>
@@ -308,6 +347,20 @@ function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
         )}
       </div>
 
+      <AnimatePresence>
+        {showLines && (
+          <motion.div
+            className="chat-lines-pop card"
+            initial={{ opacity: 0, y: 12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+          >
+            <PickupLines lines={pickupLines(firstName(profile.name), matchId * 31 + lineSeed)} onPick={pickLine} onShuffle={() => setLineSeed((s) => s + 1)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <form
         className="chat-compose"
         onSubmit={(e) => {
@@ -315,6 +368,16 @@ function Chat({ matchId, onGone }: { matchId: number; onGone: () => void }) {
           send()
         }}
       >
+        <button
+          type="button"
+          className={`chat-lines-btn ${showLines ? 'on' : ''}`}
+          onClick={() => setShowLines((v) => !v)}
+          aria-label="Pickup line ideas"
+          aria-expanded={showLines}
+          title="Need a line?"
+        >
+          <Sparkles size={19} />
+        </button>
         <textarea
           ref={input}
           rows={1}

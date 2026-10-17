@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { Briefcase, Building2, Cake, Heart, Home, Ruler, Sparkles, User } from 'lucide-react'
-import type { LikeTarget, Profile } from '../api'
+import { Briefcase, Building2, Cake, Github, Heart, Home, Instagram, Linkedin, Ruler, Sparkles, User } from 'lucide-react'
+import type { LikeTarget, Profile, Socials } from '../api'
 import { GENDER_LABEL } from '../constants'
 import { formatHeight } from '../utils'
 
@@ -17,6 +17,12 @@ interface Props {
   /** Highlights the item that was liked (used in "Likes you"). */
   highlight?: { type: string; index: number | null }
 }
+
+export const SOCIAL_LINKS: { key: keyof Socials; label: string; icon: ReactNode; url: (handle: string) => string; placeholder: string }[] = [
+  { key: 'instagram', label: 'Instagram', icon: <Instagram size={17} />, url: (h) => `https://instagram.com/${h}`, placeholder: '@username or profile link' },
+  { key: 'linkedin', label: 'LinkedIn', icon: <Linkedin size={17} />, url: (h) => `https://www.linkedin.com/in/${h}`, placeholder: 'linkedin.com/in/your-name' },
+  { key: 'github', label: 'GitHub', icon: <Github size={17} />, url: (h) => `https://github.com/${h}`, placeholder: 'username or profile link' },
+]
 
 const reveal = {
   initial: { opacity: 0, y: 28 },
@@ -80,6 +86,7 @@ export default function ProfileView({ profile, onLike, highlight }: Props) {
     [<Home size={17} />, p.hometown],
   ]
   const shownVitals = vitals.filter(([, v]) => v)
+  const socials = SOCIAL_LINKS.filter((s) => p.socials?.[s.key])
 
   const about = (p.bio || p.interests.length > 0) && (
     <motion.div key="about" className="pv-about card" {...reveal}>
@@ -121,6 +128,20 @@ export default function ProfileView({ profile, onLike, highlight }: Props) {
               {icon}
               {value}
             </span>
+          ))}
+        </motion.div>
+      )}
+
+      {socials.length > 0 && (
+        <motion.div className="pv-socials card" {...reveal}>
+          {socials.map((s) => (
+            <a key={s.key} className="pv-social" href={s.url(p.socials![s.key]!)} target="_blank" rel="noopener noreferrer">
+              {s.icon}
+              <span>
+                <b>{s.label}</b> {s.key === 'instagram' ? '@' : ''}
+                {p.socials![s.key]}
+              </span>
+            </a>
           ))}
         </motion.div>
       )}

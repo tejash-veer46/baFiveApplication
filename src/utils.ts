@@ -27,26 +27,40 @@ export const formatHeight = (cm: number) => {
   return `${Math.floor(inches / 12)}′${inches % 12}″`
 }
 
-/** Resize an image file in the browser and return a compact JPEG data URL. */
-export const fileToPhoto = (file: File, maxSize = 1080): Promise<string> =>
+const loadImage = (file: File): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
-    if (!file.type.startsWith('image/')) return reject(new Error('Please choose an image file'))
     const url = URL.createObjectURL(file)
     const img = new Image()
     img.onload = () => {
-      const scale = Math.min(1, maxSize / Math.max(img.width, img.height))
-      const canvas = document.createElement('canvas')
-      canvas.width = Math.round(img.width * scale)
-      canvas.height = Math.round(img.height * scale)
-      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
       URL.revokeObjectURL(url)
-      resolve(canvas.toDataURL('image/jpeg', 0.82))
+      resolve(img)
     }
     img.onerror = () => {
       URL.revokeObjectURL(url)
-      reject(new Error("That image couldn't be read"))
+      reject(new Error("That image couldn't be read. Try a JPEG or PNG."))
     }
     img.src = url
   })
+
+/**
+ * Resize an image file in the browser and return a compact JPEG data URL.
+ * Phone photos are ~12 MP (≈50 MB once decoded), so call this one file at a time and free memory as we go.
+ */
+export const fileToPhoto = async (file: File, maxSize = 1080): Promise<string> => {
+  if (!file.type.startsWith('image/')) throw new Error('Please choose an image file')
+  const img = await loadImage(file)
+  const scale = Math.min(1, maxSize / Math.max(img.naturalWidth, img.naturalHeight))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(img.naturalWidth * scale))
+  canvas.height = Math.max(1, Math.round(img.naturalHeight * scale))
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('Your browser ran out of memory. Try adding fewer photos at once.')
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+  const data = canvas.toDataURL('image/jpeg', 0.8)
+  // Release the decoded pixels right away instead of waiting for garbage collection.
+  canvas.width = canvas.height = 0
+  img.src = ''
+  return data
+}
 
 export const firstName = (name: string) => name.split(' ')[0]

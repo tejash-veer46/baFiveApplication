@@ -250,6 +250,70 @@
   background: var(--grad-soft);
   transform: translateX(4px);
 }
+.chat-lines {
+  margin-top: 18px;
+  text-align: left;
+}
+.chat-lines-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.chat-lines-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chat-lines .chat-openers {
+  margin-top: 8px;
+}
+.chat-shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand);
+  transition: background 0.2s;
+}
+.chat-shuffle:hover {
+  background: var(--grad-soft);
+}
+.chat-opener.corny {
+  font-style: italic;
+  border: 1px dashed var(--line);
+}
+.chat-lines-pop {
+  margin: 0 16px 8px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.chat-lines-pop .chat-lines {
+  margin-top: 0;
+}
+.chat-lines-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color 0.2s, background 0.2s;
+}
+.chat-lines-btn:hover,
+.chat-lines-btn.on {
+  color: var(--brand);
+  background: var(--grad-soft);
+}
 .chat-day {
   align-self: center;
   margin: 14px 0 8px;

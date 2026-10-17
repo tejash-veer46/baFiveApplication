@@ -7,23 +7,32 @@ import { fileToPhoto } from '../utils'
 import { useToast } from '../context/ui'
 
 /* ---------------- Photos ---------------- */
+const MAX_PHOTOS = 6
+
 export function PhotoGrid({ photos, onChange }: { photos: string[]; onChange: (p: string[]) => void }) {
   const toast = useToast()
   const [busy, setBusy] = useState(false)
   const dragFrom = useRef<number | null>(null)
   const [over, setOver] = useState<number | null>(null)
 
-  const addFiles = async (files: FileList | null) => {
-    if (!files?.length) return
+  const addFiles = async (input: HTMLInputElement) => {
+    const picked = [...(input.files ?? [])]
+    input.value = '' // so picking the same file again still triggers a change
+    if (!picked.length) return
+    const room = MAX_PHOTOS - photos.length
+    if (room <= 0) return toast(`You already have ${MAX_PHOTOS} photos. Remove one to add another.`, 'error')
+    if (picked.length > room) {
+      toast(`Only ${MAX_PHOTOS} photos fit, so we added the first ${room} of the ${picked.length} you picked.`, 'error')
+    }
     setBusy(true)
+    const added: string[] = []
     try {
-      const room = 6 - photos.length
-      const added = await Promise.all([...files].slice(0, room).map((f) => fileToPhoto(f)))
-      onChange([...photos, ...added])
-      if (files.length > room) toast('You can add up to 6 photos', 'error')
+      // One at a time: decoding several full-size phone photos at once can crash mobile browsers.
+      for (const file of picked.slice(0, room)) added.push(await fileToPhoto(file))
     } catch (e) {
       toast((e as Error).message, 'error')
     } finally {
+      if (added.length) onChange([...photos, ...added])
       setBusy(false)
     }
   }
@@ -38,13 +47,13 @@ export function PhotoGrid({ photos, onChange }: { photos: string[]; onChange: (p
 
   return (
     <div className="photo-grid">
-      {Array.from({ length: 6 }, (_, i) => {
+      {Array.from({ length: MAX_PHOTOS }, (_, i) => {
         const src = photos[i]
         if (!src) {
           const isNext = i === photos.length
           return (
             <label key={`empty-${i}`} className={`photo-slot empty ${isNext ? 'next' : ''}`}>
-              <input type="file" accept="image/*" multiple hidden disabled={busy} onChange={(e) => addFiles(e.target.files)} />
+              <input type="file" accept="image/*" multiple hidden disabled={busy} onChange={(e) => addFiles(e.target)} />
               {busy && isNext ? <span className="spinner" /> : <ImagePlus size={26} />}
             </label>
           )
@@ -85,6 +94,9 @@ export function PhotoGrid({ photos, onChange }: { photos: string[]; onChange: (p
           </motion.div>
         )
       })}
+      {photos.length >= MAX_PHOTOS && (
+        <p className="photo-hint">All {MAX_PHOTOS} photo slots are full. Remove one to add another.</p>
+      )}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, Check } from 'lucide-react'
 import { Choice, InterestPicker, PhotoGrid, PromptEditor } from '../components/ProfileFields'
 import { api, type Gender, type Preference, type Prompt } from '../api'
+import { SOCIAL_LINKS } from '../components/ProfileView'
 import { useMe } from '../context/auth'
 import { useToast } from '../context/ui'
 import { DEPARTMENTS } from '../constants'
@@ -38,6 +39,7 @@ export default function EditProfile() {
       photos: me.photos,
       prompts: me.prompts,
       interests: me.interests,
+      socials: { github: me.socials?.github ?? '', linkedin: me.socials?.linkedin ?? '', instagram: me.socials?.instagram ?? '' },
     }),
     [me],
   )
@@ -137,6 +139,28 @@ export default function EditProfile() {
 
       <Section title="Interests" sub={`${form.interests.length}/10 selected`}>
         <InterestPicker value={form.interests} onChange={(v) => set('interests', v)} />
+      </Section>
+
+      <Section title="Socials" sub="Optional. Only people you match with can see these.">
+        <div className="edit-grid">
+          {SOCIAL_LINKS.map((s) => (
+            <label key={s.key} className="field">
+              <span className="field-icon-label">
+                {s.icon} {s.label}
+              </span>
+              <input
+                className="input"
+                value={form.socials[s.key]}
+                maxLength={200}
+                placeholder={s.placeholder}
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck={false}
+                onChange={(e) => set('socials', { ...form.socials, [s.key]: e.target.value })}
+              />
+            </label>
+          ))}
+        </div>
       </Section>
 
       <Section title="Dating preferences">

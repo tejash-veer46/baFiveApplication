@@ -34,6 +34,13 @@ export interface Prompt {
   answer: string
 }
 
+/** Usernames only. Visible to yourself and your matches. */
+export interface Socials {
+  github?: string
+  linkedin?: string
+  instagram?: string
+}
+
 export interface Profile {
   id: number
   name: string
@@ -50,6 +57,8 @@ export interface Profile {
   interests: string[]
   sharedInterests: string[]
   activeRecently: boolean
+  /** Only present on your own profile and on people you've matched with. */
+  socials?: Socials
 }
 
 export interface Me extends Profile {
@@ -73,6 +82,7 @@ export type ProfileUpdate = Partial<{
   photos: string[]
   prompts: Prompt[]
   interests: string[]
+  socials: Socials
 }>
 
 export type LikeTarget = { type: 'photo' | 'prompt'; index: number }
