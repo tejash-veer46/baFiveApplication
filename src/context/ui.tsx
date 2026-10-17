@@ -2,32 +2,35 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { AnimatePresence, motion } from 'framer-motion'
 import { api, type Summary } from '../api'
 import { useAuth } from './auth'
+import { readSign, SIGN_KEY, SIGNS, type SignId } from '../theme'
 
-/* ---------------- Theme ---------------- */
-type Theme = 'light' | 'dark'
-const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({ theme: 'light', toggle: () => {} })
+/* ---------------- Sign colour (the app's neon theme) ---------------- */
+const SignContext = createContext<{ sign: SignId; setSign: (id: SignId) => void; cycle: () => void }>({
+  sign: SIGNS[0].id,
+  setSign: () => {},
+  cycle: () => {},
+})
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() =>
-    document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light',
-  )
+  const [sign, setSignState] = useState<SignId>(readSign)
   useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0E0A14' : '#FAF6F1')
-  }, [theme])
-  const toggle = () =>
-    setTheme((t) => {
-      const next = t === 'dark' ? 'light' : 'dark'
-      try {
-        localStorage.setItem('bafive-theme', next)
-      } catch {
-        /* storage unavailable */
-      }
-      return next
-    })
-  return <ThemeContext.Provider value={{ theme, toggle }}>{children}</ThemeContext.Provider>
+    document.documentElement.dataset.sign = sign
+  }, [sign])
+  const setSign = useCallback((id: SignId) => {
+    setSignState(id)
+    try {
+      localStorage.setItem(SIGN_KEY, id)
+    } catch {
+      /* storage unavailable: the choice just isn't remembered */
+    }
+  }, [])
+  const cycle = useCallback(() => {
+    const i = SIGNS.findIndex((s) => s.id === sign)
+    setSign(SIGNS[(i + 1) % SIGNS.length].id)
+  }, [sign, setSign])
+  return <SignContext.Provider value={{ sign, setSign, cycle }}>{children}</SignContext.Provider>
 }
-export const useTheme = () => useContext(ThemeContext)
+export const useSign = () => useContext(SignContext)
 
 /* ---------------- Toasts ---------------- */
 interface Toast {

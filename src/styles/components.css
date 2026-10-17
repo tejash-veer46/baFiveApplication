@@ -371,7 +371,7 @@
 }
 .like-btn:hover {
   background: var(--grad);
-  color: #fff;
+  color: var(--on-brand);
   border-color: transparent;
   box-shadow: var(--glow);
 }
@@ -499,7 +499,7 @@
   display: grid;
   place-items: center;
   padding: 20px;
-  background: radial-gradient(circle at 50% 40%, rgba(124, 92, 255, 0.92), rgba(255, 79, 109, 0.94) 55%, rgba(255, 122, 89, 0.96));
+  background: radial-gradient(circle at 50% 35%, var(--nwall) 0%, rgba(6, 4, 11, 0.97) 72%);
   overflow: hidden;
 }
 .celebrate-burst {
@@ -610,11 +610,11 @@
 }
 .toast-error {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 .toast-love {
   background: var(--grad);
-  color: #fff;
+  color: var(--on-brand);
 }
 
 /* ---------- Profile fields ---------- */
@@ -677,7 +677,7 @@
   padding: 3px 9px;
   border-radius: 999px;
   background: var(--grad);
-  color: #fff;
+  color: var(--on-brand);
   font-size: 11px;
   font-weight: 800;
 }

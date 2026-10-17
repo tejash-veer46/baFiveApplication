@@ -1,28 +1,12 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Briefcase, Heart, Users } from 'lucide-react'
 import { api, ApiError, type Me } from '../api'
 import { useAuth } from '../context/auth'
+import { useSign } from '../context/ui'
+import { SIGNS } from '../theme'
 import './Landing.css'
-
-/* The three neon sign colours. The first is the default; a visitor's choice is remembered in their browser. */
-const SIGNS = [
-  { id: 'electric', label: 'Pink and cyan', n1: '#ff3fa4', n2: '#2ef2ff', wall: '#1a0d2b', bg: '#06040b' },
-  { id: 'acid', label: 'Acid lime and violet', n1: '#c6ff3d', n2: '#b06bff', wall: '#13200c', bg: '#050805' },
-  { id: 'redblue', label: 'Red and blue', n1: '#ff4141', n2: '#4c8dff', wall: '#200c18', bg: '#07050a' },
-] as const
-type SignId = (typeof SIGNS)[number]['id']
-const SIGN_KEY = 'bafive-sign'
-
-const readSign = (): SignId => {
-  try {
-    const saved = localStorage.getItem(SIGN_KEY)
-    return SIGNS.find((s) => s.id === saved)?.id ?? SIGNS[0].id
-  } catch {
-    return SIGNS[0].id
-  }
-}
 
 /**
  * Pushes every `[data-repel]` element inside `root` away from the pointer, then springs it back.
@@ -419,28 +403,65 @@ function AuthCard() {
   )
 }
 
+/* What people come to ba5 for. The sign's example card follows whichever mode is lit. */
+const MODES = [
+  {
+    id: 'date',
+    icon: <Heart size={20} />,
+    title: 'Date',
+    sub: 'Coffee before 5, dinner after.',
+    who: 'Ira, 27',
+    tag: 'liked your prompt',
+    quote: '“Karaoke after 5? I do a mean Shakira.”',
+  },
+  {
+    id: 'network',
+    icon: <Briefcase size={20} />,
+    title: 'Network',
+    sub: 'Lunch-break chats that open doors.',
+    who: 'Dev, 31',
+    tag: 'product lead',
+    quote: '“Happy to share how I moved into PM. Coffee Thursday?”',
+  },
+  {
+    id: 'friends',
+    icon: <Users size={20} />,
+    title: 'Find friends',
+    sub: 'Your 6 PM badminton crew is out there.',
+    who: 'Sana, 26',
+    tag: 'new in town',
+    quote: '“Need a fourth for doubles on Sunday!”',
+  },
+] as const
+
+const TICKER = [
+  'Aanya & Kabir matched over a 4 PM chai',
+  'Riya found a Saturday running buddy',
+  'Arjun booked a mentor coffee for Thursday',
+  'Meera & Ishaan: rooftop at 7, laptops closed',
+  'Zoya joined a 6 PM badminton four',
+  'Kabir got a referral from a lunch-walk chat',
+  'Tara & Leo: first date at the dosa place',
+]
+
 export default function Landing() {
-  const [sign, setSign] = useState<SignId>(readSign)
+  const { sign, setSign } = useSign()
   const root = useRef<HTMLDivElement>(null)
   const glow = useRef<HTMLDivElement>(null)
   useRepel(root, glow)
 
-  const current = SIGNS.find((s) => s.id === sign) ?? SIGNS[0]
-  const choose = (id: SignId) => {
-    setSign(id)
-    try {
-      localStorage.setItem(SIGN_KEY, id)
-    } catch {
-      /* private mode: the choice just isn't remembered */
-    }
-  }
+  // The modes take turns lighting up; hovering or picking one holds it.
+  const [mode, setMode] = useState(0)
+  const [held, setHeld] = useState(false)
+  useEffect(() => {
+    if (held || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = setInterval(() => setMode((m) => (m + 1) % MODES.length), 3500)
+    return () => clearInterval(id)
+  }, [held])
+  const active = MODES[mode]
 
   return (
-    <div
-      className="neon"
-      ref={root}
-      style={{ '--n1': current.n1, '--n2': current.n2, '--nwall': current.wall, '--nbg': current.bg } as CSSProperties}
-    >
+    <div className="neon" ref={root}>
       <div className="neon-grid" aria-hidden="true" />
       <div className="neon-glow" ref={glow} aria-hidden="true" />
 
@@ -462,7 +483,7 @@ export default function Landing() {
               title={s.label}
               className={`neon-swatch ${s.id === sign ? 'on' : ''}`}
               style={{ '--s1': s.n1, '--s2': s.n2 } as CSSProperties}
-              onClick={() => choose(s.id)}
+              onClick={() => setSign(s.id)}
             />
           ))}
         </div>
@@ -480,7 +501,7 @@ export default function Landing() {
           </Repel>
           <Repel weight={0.5}>
             <p className="neon-lede">
-              Say hi on a coffee break before five, keep it going after. Dating for people whose best plans start at 5:01.
+              Date, network or find your people, on a coffee break before five or once you've logged off after it.
             </p>
           </Repel>
           <Repel weight={0.12}>
@@ -499,8 +520,18 @@ export default function Landing() {
           </div>
           <div className="ns-row ns-mid">
             <Repel weight={1.1} className="ns-card">
-              <b>Ira, 27</b> <span>· liked your prompt</span>
-              <p>“Karaoke after 5? I do a mean Shakira.”</p>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={active.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <b>{active.who}</b> <span>· {active.tag}</span>
+                  <p>{active.quote}</p>
+                </motion.div>
+              </AnimatePresence>
             </Repel>
             <Repel weight={0.5} className="ns-five">
               5
@@ -514,8 +545,38 @@ export default function Landing() {
               AFTER
             </Repel>
           </div>
+
+          <div className="ns-modes" role="group" aria-label="What you can do on ba5" onPointerEnter={() => setHeld(true)} onPointerLeave={() => setHeld(false)}>
+            {MODES.map((m, i) => (
+              <Repel key={m.id} weight={0.9}>
+                <button
+                  type="button"
+                  className={`ns-mode ${i === mode ? 'on' : ''}`}
+                  aria-pressed={i === mode}
+                  onClick={() => {
+                    setMode(i)
+                    setHeld(true)
+                  }}
+                >
+                  <span className="ns-mode-icon">{m.icon}</span>
+                  <b>{m.title}</b>
+                  <span className="ns-mode-sub">{m.sub}</span>
+                </button>
+              </Repel>
+            ))}
+          </div>
         </section>
       </main>
+
+      <div className="neon-ticker" aria-hidden="true">
+        <div className="neon-ticker-track">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span key={i}>
+              <i /> {t}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

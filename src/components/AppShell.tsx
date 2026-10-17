@@ -1,14 +1,15 @@
 import { NavLink, useLocation, useNavigate, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Compass, Heart, LogOut, MessageCircle, Moon, Sun } from 'lucide-react'
+import { Compass, Heart, LogOut, MessageCircle, Palette } from 'lucide-react'
 import Logo from './Logo'
 import { useAuth } from '../context/auth'
-import { useSummary, useTheme } from '../context/ui'
+import { useSign, useSummary } from '../context/ui'
+import { SIGNS } from '../theme'
 
 export default function AppShell() {
   const { user, logout } = useAuth()
   const { summary } = useSummary()
-  const { theme, toggle } = useTheme()
+  const { sign, cycle } = useSign()
   const location = useLocation()
   const navigate = useNavigate()
   const outlet = useOutlet()
@@ -57,9 +58,9 @@ export default function AppShell() {
           </NavLink>
         </nav>
         <div className="sidebar-foot">
-          <button className="nav-item" onClick={toggle}>
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            <span className="nav-label">{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+          <button className="nav-item" onClick={cycle} title="Change the sign colour">
+            <Palette size={20} />
+            <span className="nav-label">{SIGNS.find((s) => s.id === sign)?.label}</span>
           </button>
           <button className="nav-item" onClick={logout}>
             <LogOut size={20} />

@@ -55,8 +55,8 @@ export default function MyProfile() {
               />
               <defs>
                 <linearGradient id="ring-g" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#FF4F6D" />
-                  <stop offset="1" stopColor="#7C5CFF" />
+                  <stop offset="0" style={{ stopColor: 'var(--n1)' }} />
+                  <stop offset="1" style={{ stopColor: 'var(--n2)' }} />
                 </linearGradient>
               </defs>
             </svg>

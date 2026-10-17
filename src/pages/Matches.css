@@ -354,7 +354,7 @@
 }
 .mine .bubble {
   background: var(--grad);
-  color: #fff;
+  color: var(--on-brand);
 }
 .mine .bubble.tail {
   border-bottom-left-radius: 20px;
@@ -415,7 +415,7 @@
   place-items: center;
   flex-shrink: 0;
   background: var(--grad);
-  color: #fff;
+  color: var(--on-brand);
   box-shadow: var(--glow);
   transition: opacity 0.2s;
 }
@@ -427,7 +427,7 @@
 
 .danger-btn {
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
 }
 
 @media (max-width: 900px) {
